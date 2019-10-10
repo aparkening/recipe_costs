@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  weight_size: 1.5
+  weight_unit: MyString
+  vol_size: 1.5
+  vol_unit: MyString
+
+two:
+  weight_size: 1.5
+  weight_unit: MyString
+  vol_size: 1.5
+  vol_unit: MyString
