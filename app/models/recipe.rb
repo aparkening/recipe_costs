@@ -8,11 +8,7 @@ class Recipe < ApplicationRecord
 
   def my_ingredients
     #merge recipe ingredient and ingredients
-
   end
-
-
-
 
   # Writer for custom nested attributes
   # def ingredients_attributes=(ingredient_attributes)

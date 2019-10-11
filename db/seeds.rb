@@ -15,15 +15,3 @@ user_r.recipe_ingredients.build(ingredient:ing, ingredient_amount:1.5, ingredien
 
 # Make ingredient cost specific to user.
 user_ing = user.user_ingredient_costs.build(ingredient:ing, cost:14.00, cost_size:1, cost_unit:"pounds")
-
-
-# Could make custom ingredient class
-  # - Merge ingredient name, amount, costs, etc.
-  # initialize with ingredient object (from recipe_ingredient table) and user_costs object
-
-  # custom initialize(recipe_ingredient)
-
-  # recipe.user
-  # if user_ingredient_costs == recipe_ingredient
-  # 
-#####
