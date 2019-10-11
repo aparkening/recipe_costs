@@ -7,6 +7,7 @@ class User < ApplicationRecord
   has_many :flags
   has_many :user_ingredient_costs
   has_many :ingredients, through: :user_ingredient_costs
+
   # has_many :recipe_ingredients
   # has_many :ingredients, through: :recipe_ingredients
   

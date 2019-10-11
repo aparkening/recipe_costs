@@ -52,14 +52,12 @@ ActiveRecord::Schema.define(version: 2019_10_10_213134) do
   create_table "recipe_ingredients", force: :cascade do |t|
     t.integer "recipe_id"
     t.integer "ingredient_id"
-    t.integer "user_ingredient_costs_id"
     t.float "ingredient_amount"
     t.string "ingredient_unit"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.index ["ingredient_id"], name: "index_recipe_ingredients_on_ingredient_id"
     t.index ["recipe_id"], name: "index_recipe_ingredients_on_recipe_id"
-    t.index ["user_ingredient_costs_id"], name: "index_recipe_ingredients_on_user_ingredient_costs_id"
   end
 
   create_table "recipes", force: :cascade do |t|
@@ -109,7 +107,6 @@ ActiveRecord::Schema.define(version: 2019_10_10_213134) do
   add_foreign_key "flags", "users"
   add_foreign_key "recipe_ingredients", "ingredients"
   add_foreign_key "recipe_ingredients", "recipes"
-  add_foreign_key "recipe_ingredients", "user_ingredient_costs", column: "user_ingredient_costs_id"
   add_foreign_key "user_ingredient_costs", "ingredients"
   add_foreign_key "user_ingredient_costs", "users"
   add_foreign_key "weight_volume_conversions", "ingredients"

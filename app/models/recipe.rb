@@ -6,6 +6,14 @@ class Recipe < ApplicationRecord
   has_many :recipe_ingredients
   has_many :ingredients, through: :recipe_ingredients
 
+  def my_ingredients
+    #merge recipe ingredient and ingredients
+
+  end
+
+
+
+
   # Writer for custom nested attributes
   # def ingredients_attributes=(ingredient_attributes)
   #   ingredient_attributes.values.each do |ing_attribute|
