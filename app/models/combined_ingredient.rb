@@ -1,6 +1,14 @@
 class CombinedIngredient
 
   # Build object that combines amounts, units, and costs from ingredients and user_ingredient_costs tables
+
+  # Add ingredient to recipe through CombinedIngredient object, instead of Ingredient and UserIngredient
+  # Want to access:
+  # ingredient cost, cost size, cost unit, and name
+  # recipe_ingredient amount and unit
+  # weight_volume_conversion weight size, weight unit, volume size, and volume unit
+  # Calculate: ingredient cost in this recipe
+
   def initialize(recipe_ingredient)
     # Find user
     @user = recipe_ingredient.user
