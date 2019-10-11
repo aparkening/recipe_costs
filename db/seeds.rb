@@ -8,3 +8,8 @@
 
 
 
+u = User.new(name:"Steve Tester", password:"testing", role:"User", organization:"A&E Bakery")
+
+i = Ingredient.new(name:"flour", cost:12.50, cost_size:5, cost_unit:"pounds")
+
+u.recipes.build(name:"Apple Pie", servings:8) 
