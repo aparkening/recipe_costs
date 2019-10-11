@@ -10,34 +10,36 @@ class CombinedIngredient
   # Calculate: ingredient cost in this recipe
 
   def initialize(recipe_ingredient)
-    # Find user
+    # Set existing user and ingredient from input
     @user = recipe_ingredient.user
-
-    # Find ingredient
     @ingredient = recipe_ingredient.ingredient
+    @name = @ingredient.name
+    @amount = recipe_ingredient.ingredient_amount
+    @unit = recipe_ingredient.ingredient_unit
 
-    # If ingredient in user_ingredient_costs table, grab it's cost, cost size, and cost unit
-    # Find
-    # if user.user_ingredient_costs == @ingredient
+    # Look for ingredient in user_ingredient_costs table
+    user_details = @user.UserIngredientCost.find_by(id: @ingredient.id)
 
-    # Else grab cost, cost size, and cost unit from ingredients table
-    # Find
-    
+    if details
+      # If ingredient in user_ingredient_costs table, grab cost, cost size, and cost unit
+      @cost = user_details.cost
+      @cost_size = user_details.cost_size
+      @cost_unit = user_details.cost_unit
+    else
+      # Else grab cost, cost size, and cost unit from ingredients table
+      @cost = @ingredient.cost
+      @cost_size = @ingredient.cost_size
+      @cost_unit = @ingredient.cost_unit
+    end
 
-  
+    # Find total ingredient cost by amount and weight_volume_conversion table
+    # If @unit is not the same as @cost_unit
+      # if @ingredient.id in weight_volume_conversions table, grab conversion data and convert
+      # else use constants to convert
+    # Calculate total cost = normalized ingredient_amount * @cost
+    # 50lb KA flour for $50
+    # 1.5 cups of flour in brownies 
+
   end
-
-
-# Could make custom ingredient class
-  # - Merge ingredient name, amount, costs, etc.
-  # initialize with ingredient object (from recipe_ingredient table) and user_costs object
-
-  # custom initialize(recipe_ingredient)
-
-  # recipe.user
-  # if user_ingredient_costs == recipe_ingredient
-  # 
-#####
-
 
 end

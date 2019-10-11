@@ -7,14 +7,14 @@ user1 = User.create(name:"Steve Tester", password:"testing", role:"User", organi
 
 user1_r1 = user1.recipes.create(name:"Apple Pie", servings:8) 
 
-ing1 = Ingredient.create(name:"flour", cost:12.50, cost_size:5, cost_unit:"pounds")
+ing1 = Ingredient.create(name:"flour", cost:12.50, cost_size:5, cost_unit:"pound")
 
 # Add ingredient to recipe
-r1_ing1 = user1_r1.recipe_ingredients.build(ingredient:ing1, ingredient_amount:1.5, ingredient_unit:"cups")
-  # get name with user_r.recipe_ingredients.first.ingredient.name
+r1_ing1 = user1_r1.recipe_ingredients.build(ingredient:ing1, ingredient_amount:1.5, ingredient_unit:"cup")
+  # get name with user1_r1.recipe_ingredients.first.ingredient.name
 
 # Make ingredient cost specific to user.
-user1_ing1 = user1.user_ingredient_costs.build(ingredient:ing1, cost:14.00, cost_size:1, cost_unit:"pounds")
+user1_ing1 = user1.user_ingredient_costs.build(ingredient:ing1, cost:14.00, cost_size:1, cost_unit:"ounce")
 
 
 ### Future:
