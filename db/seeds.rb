@@ -62,4 +62,9 @@ RecipeIngredient.where(ingredient: ing)
 recipes = RecipeIngredient.joins({recipe: user}, {ingredient: ing})
 
 
+
+
+# Type of data being returned; Recipes
+
+
 # - Calculate recipe cost using weight_volume_conversion table
