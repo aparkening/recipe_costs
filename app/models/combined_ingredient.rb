@@ -1,5 +1,12 @@
 class CombinedIngredient
 
+  # More volume conversions in ounces
+  # TSP = 0.16667
+  # TBSP = 0.5
+  # CUP = 0.0625 gal
+
+  # A cup of all-purpose flour weighs 4 1/4 ounces or 120 grams
+
   # Build object that combines amounts, units, and costs from ingredients and user_ingredient_costs tables
 
   # Add ingredient to recipe through CombinedIngredient object, instead of Ingredient and UserIngredient
@@ -12,10 +19,15 @@ class CombinedIngredient
   def initialize(recipe_ingredient)
     # Set existing user and ingredient from input
     @user = recipe_ingredient.user
-    @ingredient = recipe_ingredient.ingredient
+    @ingredient = recipe_ingredient.ingredient #ing1
     @name = @ingredient.name
-    @amount = recipe_ingredient.ingredient_amount
-    @unit = recipe_ingredient.ingredient_unit
+    @amount = recipe_ingredient.ingredient_amount #amt
+    @unit = recipe_ingredient.ingredient_unit #unit
+
+    # weight = nil
+    # Determine if weight or volume unit
+    weight = if Measured::Weight.unit_names.include?(@unit)
+
 
     # Look for ingredient in user_ingredient_costs table
     user_details = @user.UserIngredientCost.find_by(id: @ingredient.id)
@@ -32,15 +44,31 @@ class CombinedIngredient
       @cost_unit = @ingredient.cost_unit
     end
 
+
+      
+
     # Find total ingredient cost by amount and weight_volume_conversion table
     # If @unit is not the same as @cost_unit
     if @unit != @cost_unit
 
-      # Find @ingredient.id in weight_volume_conversions table
-      conversion_data = WeightVolumeConversion.find_by(id: @ingredient.id)
 
-      # If entry in weight_volume_conversions table, grab conversion data and convert
-      if conversion_data
+
+
+      # Look for specific conversion in weight_volume_conversions table
+      # conversion_data = WeightVolumeConversion.find_by(ingredient: @ingredient.id)
+
+      # # If entry in weight_volume_conversions table, grab conversion data and convert
+      # if conversion_data
+
+      #   # Convert to grams
+      #   if weight
+          
+
+      #   # Convert to liters
+      #   else
+
+      #   end
+
         # t.float "weight_size"
         # t.string "weight_unit"
 
@@ -51,18 +79,24 @@ class CombinedIngredient
         # @cost_size = user_details.cost_size
         # @cost_unit = user_details.cost_unit
 
-      # else use constants to convert
-      else 
-
+      # # else use constants to convert
+      # else 
+        # Convert to grams
+        if weight
+          converted_size = Measured::Weight.new(@amount, @unit).convert_to(@cost_unit).value.to_f          
+        # Convert to volume
+        else
+          converted_size = Measured::Volume.new(@amount, @unit).convert_to(@cost_unit).value.to_f
+        end
       end
     end 
     
     # Calculate total cost
     # 50lb KA flour for $50
     # 1.5 cups of flour in brownies 
-    
-    # @total_cost = @cost * converted_amount
 
+    base_cost = @cost/cost_size
+    @total_cost = base_cost * converted_size
 
   end
 

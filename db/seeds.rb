@@ -35,7 +35,18 @@ flag1 = user1.flags.create(ingredient: ing1, note: "Flour is spelled wrong.")
 cat1 = user1.categories.create(name:"Desserts") 
 
 # - User add recipe to category
+cat1.recipes << user1_r1
 
 # - Add weight volume conversion to weight_volume_conversion table
+convert1 = WeightVolumeConversion.create(ingredient:ing1, weight_size: 4.25, weight_unit: "oz", vol_size: 1, vol_unit: "c")
+
+
 # - Find all recipes (from user) that ingredient is used in
+
+user.recipes.where(ingredient: ing)
+RecipeIngredient.where(ingredient: ing)
+
+recipes = RecipeIngredient.joins({recipe: user}, {ingredient: ing})
+
+
 # - Calculate recipe cost using weight_volume_conversion table
