@@ -76,7 +76,7 @@ class CombinedIngredient
           converted_amount = Measured::Volume.new(oz_amount, "oz").convert_to(@base_cost_unit).value.to_f
         when "Tbsp"
           oz_amount = TBSP * @amount
-        else
+        when "cup"
           oz_amount = CUP * @amount
         end
 
