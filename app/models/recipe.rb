@@ -6,6 +6,8 @@ class Recipe < ApplicationRecord
   has_many :recipe_ingredients
   has_many :ingredients, through: :recipe_ingredients
 
+  #### Add scope for returning user recipes by ingredient
+
   def my_ingredients
     #merge recipe ingredient and ingredients
   end

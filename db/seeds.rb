@@ -2,6 +2,7 @@
 # The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
 
 
+### Console Testing
 user1 = User.last
 
 user1_recipe = user1.recipes.last
@@ -9,17 +10,16 @@ ing1 = Ingredient.last
 
 recipe1_ing1 = user1_recipe.recipe_ingredients.last
 
+user1_ing1 = user1.user_ingredient_costs.last
+
 combo_ing1 = CombinedIngredient.new(recipe1_ing1)
 
 
-user1_ing1 = user1.user_ingredient_costs.last
-
+### Build seeds
 
 # Make User, recipe, ingredient
 user1 = User.create(name:"Steve Tester", password:"testing", role:"User", organization:"A&E Bakery")
-
 user1_r1 = user1.recipes.create(name:"Apple Pie", servings:8) 
-
 ing1 = Ingredient.create(name:"flour", cost:12.50, cost_size:5, cost_unit:"lb")
 
 # Add ingredient to recipe
@@ -29,42 +29,31 @@ r1_ing1 = user1_r1.recipe_ingredients.create(ingredient:ing1, ingredient_amount:
 # Make ingredient cost specific to user.
 user1_ing1 = user1.user_ingredient_costs.create(ingredient:ing1, cost:14.00, cost_size:1, cost_unit:"lb")
 
-
-### Future:
-# Add ingredient to recipe through CombinedIngredient object, instead of Ingredient and UserIngredient
-# Want to access:
-# ingredient cost, cost size, cost unit, and name
-# recipe_ingredient amount and unit
-# weight_volume_conversion weight size, weight unit, volume size, and volume unit
-# Calculate: ingredient cost in this recipe
+# Set CombinedIngredient object that combines data in Ingredient and UserIngredient
 combo_ing1 = CombinedIngredient.new(r1_ing1)
 
-
-### Test
-# - User add flag to ingredient
+# Add flag to ingredient
 flag1 = user1.flags.create(ingredient: ing1, note: "Flour is spelled wrong.")
 
-# - User add category
+# Add category
 cat1 = user1.categories.create(name:"Desserts") 
 
-# - User add recipe to category
+# Add recipe to category
 cat1.recipes << user1_r1
 
-# - Add weight volume conversion to weight_volume_conversion table
+# Add weight volume conversion to weight_volume_conversion table
 convert1 = WeightVolumeConversion.create(ingredient:ing1, weight_size: 4.25, weight_unit: "oz", vol_size: 1, vol_unit: "c")
 
-
-# - Find all recipes (from user) that ingredient is used in
-
-user.recipes.where(ingredient: ing)
-RecipeIngredient.where(ingredient: ing)
-
-recipes = RecipeIngredient.joins({recipe: user}, {ingredient: ing})
+# Find all recipes (from user) that ingredient is used in
 
 
+# my_ing_recipes = Recipe.joins(ingredients: ing1)
 
+# Article.joins(comments: :guest)
 
-# Type of data being returned; Recipes
+# my_ing_recipes = Recipe.joins(ingredients: ing1).where(
+
+# Post.joins(:reaction_types).where(reaction_types: {name: type}).group('id').order(Arel.sql('count(reaction_type_id) DESC')).limit(limit).count
 
 
 # - Calculate recipe cost using weight_volume_conversion table
