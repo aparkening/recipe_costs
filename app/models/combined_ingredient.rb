@@ -1,27 +1,32 @@
 class CombinedIngredient
-  attr_reader :total_cost, :user, :ingredient
+  attr_reader :name, :amount, :amount_unit, :total_cost, :user, :ingredient, :base_cost_unit, :base_cost_size, :base_cost, :cost_ratio
 
-  ### Constants for conversion
-  # More volume conversions in oz
-  TSP = 0.16667
-  TBSP = 0.5
+  ### Constants for conversion not included in Measured gem
+  TSP = 0.16667 #oz
+  TBSP = 0.5 # oz
+  CUP = 8 # oz
   # A cup of all-purpose flour weighs 4 1/4 ounces or 120 grams
   
+
   ### Build object that combines amounts, units, and costs from ingredients and user_ingredient_costs tables
-  # Finally, calculate ingredient cost in this recipe
+  # Then calculate ingredient cost for recipe
 
   def initialize(recipe_ingredient)
-    # Set existing user and ingredient from input
     @user = recipe_ingredient.recipe.user
     @ingredient = recipe_ingredient.ingredient
+    @name = @ingredient.name
     @amount = recipe_ingredient.ingredient_amount
-    @unit = recipe_ingredient.ingredient_unit
-    @total_cost = 0
+    @amount_unit = recipe_ingredient.ingredient_unit
     
-    @cost, @cost_size, @cost_unit = nil, nil, nil, nil
+    @total_cost, @cost_ratio, @base_cost, @base_cost_size, @base_cost_unit = 0, 0, 0, 0, ""
 
+    # Get specific ingredients for costs
+    self.set_ingredients
+
+    # Calculate costs
     self.calc_costs
   end
+
 
   # Look for ingredients in UserIngredient first, then Ingredient
   def set_ingredients
@@ -30,51 +35,55 @@ class CombinedIngredient
 
     if user_details
       # If ingredient in user_ingredient_costs table, grab cost, cost size, and cost unit
-      @cost = user_details.cost
-      @cost_size = user_details.cost_size
-      @cost_unit = user_details.cost_unit
+      @base_cost = user_details.cost
+      @base_cost_size = user_details.cost_size
+      @base_cost_unit = user_details.cost_unit
     else
       # Else grab cost, cost size, and cost unit from main ingredients table
       ingredient = Ingredient.find_by(id: @ingredient.id)
-      @cost = ingredient.cost
-      @cost_size = ingredient.cost_size
-      @cost_unit = ingredient.cost_unit
+      @base_cost = ingredient.cost
+      @base_cost_size = ingredient.cost_size
+      @base_cost_unit = ingredient.cost_unit
     end
   end
+
 
   # Calculate base and total costs
   def calc_costs
 
-    # Get specific ingredients for costs
-    self.set_ingredients
-
     # Calculate base cost by dividing cost by size
-    base_cost = @cost.to_f / @cost_size
+    @cost_ratio = @base_cost.to_f / @base_cost_size
 
-    # If @unit == @cost_unit, multiply amount by base_cost
-    if @unit == @cost_unit
-      @total_cost = (base_cost * @amount).round(2)
+    # If @amount_unit == @base_cos_unit, no conversion needed. Multiply amount by base_cost
+    if @amount_unit == @base_cost_unit
+      @total_cost = (@cost_ratio * @amount).round(2)
     
     # Else convert units to calculate total cost
     else
       # If unit in Measured Weight database, convert
-      if Measured::Weight.unit_names.include?(@unit)
-        converted_amount = Measured::Weight.new(@amount, @unit).convert_to(@cost_unit).value.to_f          
+      if Measured::Weight.unit_names.include?(@amount_unit)
+        converted_amount = Measured::Weight.new(@amount, @amount_unit).convert_to(@base_cost_unit).value.to_f          
       
-      # Else look for teaspoons, tablespoons, or convert by volume
-      else
-        if @unit == "tsp"
+      # If unit in Measured Volume database, convert
+      elsif Measured::Volume.unit_names.include?(@amount_unit)
+        converted_amount = Measured::Volume.new(@amount, @amount_unit).convert_to(@base_cost_unit).value.to_f
+      
+      # Else convert by constants
+      else 
+        case @amount_unit
+        when "tsp"
           oz_amount = TSP * @amount
-          converted_amount = Measured::Volume.new(oz_amount, "oz").convert_to(@cost_unit).value.to_f
-        elsif @unit == "Tbsp"
+          converted_amount = Measured::Volume.new(oz_amount, "oz").convert_to(@base_cost_unit).value.to_f
+        when "Tbsp"
           oz_amount = TBSP * @amount
-          converted_amount = Measured::Volume.new(oz_amount, "oz").convert_to(@cost_unit).value.to_f
         else
-          converted_amount = Measured::Volume.new(@amount, @unit).convert_to(@cost_unit).value.to_f
+          oz_amount = CUP * @amount
         end
+
+        converted_amount = Measured::Volume.new(oz_amount, "oz").convert_to(@base_cost_unit).value.to_f
       end
 
-      @total_cost = (base_cost * converted_amount).round(2)
+      @total_cost = (@cost_ratio * converted_amount).round(2)
     end
   end
 
