@@ -2,19 +2,32 @@
 # The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
 
 
+user1 = User.last
+
+user1_recipe = user1.recipes.last
+ing1 = Ingredient.last
+
+recipe1_ing1 = user1_recipe.recipe_ingredients.last
+
+combo_ing1 = CombinedIngredient.new(recipe1_ing1)
+
+
+user1_ing1 = user1.user_ingredient_costs.last
+
+
 # Make User, recipe, ingredient
 user1 = User.create(name:"Steve Tester", password:"testing", role:"User", organization:"A&E Bakery")
 
 user1_r1 = user1.recipes.create(name:"Apple Pie", servings:8) 
 
-ing1 = Ingredient.create(name:"flour", cost:12.50, cost_size:5, cost_unit:"pound")
+ing1 = Ingredient.create(name:"flour", cost:12.50, cost_size:5, cost_unit:"lb")
 
 # Add ingredient to recipe
-r1_ing1 = user1_r1.recipe_ingredients.build(ingredient:ing1, ingredient_amount:1.5, ingredient_unit:"cup")
+r1_ing1 = user1_r1.recipe_ingredients.create(ingredient:ing1, ingredient_amount:6.376, ingredient_unit:"oz")
   # get name with user1_r1.recipe_ingredients.first.ingredient.name
 
 # Make ingredient cost specific to user.
-user1_ing1 = user1.user_ingredient_costs.build(ingredient:ing1, cost:14.00, cost_size:1, cost_unit:"ounce")
+user1_ing1 = user1.user_ingredient_costs.create(ingredient:ing1, cost:14.00, cost_size:1, cost_unit:"lb")
 
 
 ### Future:
