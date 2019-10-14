@@ -32,7 +32,6 @@ ActiveRecord::Schema.define(version: 2019_10_10_213134) do
   create_table "flags", force: :cascade do |t|
     t.integer "user_id"
     t.integer "ingredient_id"
-    t.string "type"
     t.string "note"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false

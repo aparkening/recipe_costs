@@ -29,8 +29,13 @@ combo_ing1 = CombinedIngredient.new(r1_ing1)
 
 ### Test
 # - User add flag to ingredient
+flag1 = user1.flags.create(ingredient: ing1, note: "Flour is spelled wrong.")
+
 # - User add category
+cat1 = user1.categories.create(name:"Desserts") 
+
 # - User add recipe to category
+
 # - Add weight volume conversion to weight_volume_conversion table
 # - Find all recipes (from user) that ingredient is used in
 # - Calculate recipe cost using weight_volume_conversion table
