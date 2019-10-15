@@ -8,22 +8,13 @@ class Recipe < ApplicationRecord
 
   ## Scope to return user's recipes by ingredient
 
-  # This works
+  # This works:
   # ing1.recipes.where(user: user1)
 
-  # As scope
-  # scope :recipes_from_ingredient, -> { where ingredient_id: @ingredient.id and user_id: @user }
-
-
-  # scope :by_ingredient, -> { joins(:ingredients).where('ingredient_id = ?', @ingredient.id) }
-
-  binding.pry
-
-  def self.recipes_of_ingredient(ingredient, user)
-    Recipe.joins(:recipe_ingredients).where(ingredient_id:  ingredient.id).where(user_id: user.id)
-  end
-  
-
+  # This works:
+  # def self.recipes_of_ingredient(ingredient, user)
+  #   Recipe.where(user_id: user.id).joins(:ingredients).where(ingredients: {id: ingredient.id})
+  # end
 
   ## SQL that works
   # SELECT "recipes".* 
@@ -34,6 +25,12 @@ class Recipe < ApplicationRecord
   #   AND "recipes"."user_id" = ? 
   # LIMIT ?  [["ingredient_id", 1], ["user_id", 1], ["LIMIT", 11]]
 
+  # As scope
+  scope :users_recipes, -> (user) {where(user_id: user.id)}
+  scope :recipes_of_ingredient, -> (ingredient) { joins(:ingredients).where(ingredients: {id: ingredient.id}) }
+
+
+  
 
 
   # Writer for custom nested attributes
