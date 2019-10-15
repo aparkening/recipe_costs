@@ -3,5 +3,6 @@ class Flag < ApplicationRecord
   belongs_to :user
   belongs_to :ingredient
 
+  # Validations
   validates :note, presence: true
 end
