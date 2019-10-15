@@ -5,5 +5,6 @@ class Category < ApplicationRecord
   has_many :recipes, through: :category_recipes
 
   # Validations
+  validates :user_id, presence: true
   validates :name, presence: true
 end
