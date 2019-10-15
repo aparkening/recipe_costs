@@ -6,6 +6,10 @@ class Recipe < ApplicationRecord
   has_many :recipe_ingredients
   has_many :ingredients, through: :recipe_ingredients
 
+  # Validations
+  validates :name, presence: true
+
+
   ## Scope to return user's recipes by ingredient
 
   # This works:
@@ -30,7 +34,7 @@ class Recipe < ApplicationRecord
   scope :recipes_of_ingredient, -> (ingredient) { joins(:ingredients).where(ingredients: {id: ingredient.id}) }
 
 
-  
+
 
 
   # Writer for custom nested attributes
