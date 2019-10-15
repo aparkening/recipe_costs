@@ -45,15 +45,6 @@ cat1.recipes << user1_r1
 convert1 = WeightVolumeConversion.create(ingredient:ing1, weight_size: 4.25, weight_unit: "oz", vol_size: 1, vol_unit: "c")
 
 # Find all recipes (from user) that ingredient is used in
+ing1.recipes.where(user: user1)
 
-
-# my_ing_recipes = Recipe.joins(ingredients: ing1)
-
-# Article.joins(comments: :guest)
-
-# my_ing_recipes = Recipe.joins(ingredients: ing1).where(
-
-# Post.joins(:reaction_types).where(reaction_types: {name: type}).group('id').order(Arel.sql('count(reaction_type_id) DESC')).limit(limit).count
-
-
-# - Calculate recipe cost using weight_volume_conversion table
+# Calculate recipe cost using weight_volume_conversion table

@@ -6,11 +6,35 @@ class Recipe < ApplicationRecord
   has_many :recipe_ingredients
   has_many :ingredients, through: :recipe_ingredients
 
-  #### Add scope for returning user recipes by ingredient
+  ## Scope to return user's recipes by ingredient
 
-  def my_ingredients
-    #merge recipe ingredient and ingredients
+  # This works
+  # ing1.recipes.where(user: user1)
+
+  # As scope
+  # scope :recipes_from_ingredient, -> { where ingredient_id: @ingredient.id and user_id: @user }
+
+
+  # scope :by_ingredient, -> { joins(:ingredients).where('ingredient_id = ?', @ingredient.id) }
+
+  binding.pry
+
+  def self.recipes_of_ingredient(ingredient, user)
+    Recipe.joins(:recipe_ingredients).where(ingredient_id:  ingredient.id).where(user_id: user.id)
   end
+  
+
+
+  ## SQL that works
+  # SELECT "recipes".* 
+  # FROM "recipes" 
+  # INNER JOIN "recipe_ingredients" 
+  #   ON "recipes"."id" = "recipe_ingredients"."recipe_id" 
+  # WHERE "recipe_ingredients"."ingredient_id" = ?
+  #   AND "recipes"."user_id" = ? 
+  # LIMIT ?  [["ingredient_id", 1], ["user_id", 1], ["LIMIT", 11]]
+
+
 
   # Writer for custom nested attributes
   # def ingredients_attributes=(ingredient_attributes)
