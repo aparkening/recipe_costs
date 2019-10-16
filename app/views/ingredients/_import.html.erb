@@ -1,0 +1,7 @@
+  <div>
+    <h2>Import more data</h2>
+    <%= form_tag path, multipart: true do %>
+      <%= file_field_tag :file %>
+      <%= submit_tag "Import CSV" %>
+    <% end %>
+  </div>

@@ -2,32 +2,31 @@
 
 <%= flash[:notice] %>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Cost</th>
-      <th>Cost Size</th>
-      <th>Cost Unit</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @ingredients.each do |ingredient| %>
-    <tr>
-      <td><%= ingredient.name %></td>
-      <td><%= ingredient.cost %></td>
-      <td><%= ingredient.cost_size %></td>
-      <td><%= ingredient.cost_unit %></td>
-    </tr>  
-    <% end %>
-  </tbody>  
-</table>
+<div class="container">
 
-<div>
-  <h2>Import more data</h2>
-  <%= form_tag ingredients_import_path, multipart: true do %>
-    <%= file_field_tag :file %>
-    <%= submit_tag "Import CSV" %>
-  <% end %>
+  <%= render "import", path: "ingredients_import_path" %>
+  
+  <h2>Current Ingredients</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Cost</th>
+        <th>Cost Size</th>
+        <th>Cost Unit</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @ingredients.each do |ingredient| %>
+      <tr>
+        <td><%= ingredient.name %></td>
+        <td><%= ingredient.cost %></td>
+        <td><%= ingredient.cost_size %></td>
+        <td><%= ingredient.cost_unit %></td>
+      </tr>  
+      <% end %>
+    </tbody>  
+  </table>
+
 </div>
 
