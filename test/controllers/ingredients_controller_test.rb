@@ -1,13 +1,13 @@
 require 'test_helper'
 
-class UsersControllerTest < ActionDispatch::IntegrationTest
+class IngredientsControllerTest < ActionDispatch::IntegrationTest
   test "should get index" do
-    get users_index_url
+    get ingredients_index_url
     assert_response :success
   end
 
   test "should get import" do
-    get users_import_url
+    get ingredients_import_url
     assert_response :success
   end
 
