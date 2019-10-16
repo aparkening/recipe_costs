@@ -1,2 +1,33 @@
-<h1>Ingredients#index</h1>
-<p>Find me in app/views/ingredients/index.html.erb</p>
+<h1>Ingredients</h1>
+
+<%= flash[:notice] %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Cost</th>
+      <th>Cost Size</th>
+      <th>Cost Unit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @ingredients.each do |ingredient| %>
+    <tr>
+      <td><%= ingredient.name %></td>
+      <td><%= ingredient.cost %></td>
+      <td><%= ingredient.cost_size %></td>
+      <td><%= ingredient.cost_unit %></td>
+    </tr>  
+    <% end %>
+  </tbody>  
+</table>
+
+<div>
+  <h2>Import more data</h2>
+  <%= form_tag ingredients_import_path, multipart: true do %>
+    <%= file_field_tag :file %>
+    <%= submit_tag "Import CSV" %>
+  <% end %>
+</div>
+
