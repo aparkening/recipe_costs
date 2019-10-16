@@ -5,6 +5,7 @@ class CombinedIngredient
   TSP = 0.16667 #oz
   TBSP = 0.5 # oz
   CUP = 8 # oz
+  EA = 1 # individual amount
   # A cup of all-purpose flour weighs 4 1/4 ounces or 120 grams
   
 
@@ -57,7 +58,7 @@ class CombinedIngredient
     # If @amount_unit == @base_cos_unit, no conversion needed. Multiply amount by base_cost
     if @amount_unit == @base_cost_unit
       @total_cost = (@cost_ratio * @amount).round(2)
-    
+  
     # Else convert units to calculate total cost
     else
       # If unit in Measured Weight database, convert
