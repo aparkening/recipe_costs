@@ -32,6 +32,7 @@ gem 'bootsnap', '>= 1.4.2', require: false
 gem 'measured'
 
 # Use bootstrap
+gem 'jquery-rails'
 gem 'bootstrap', '>= 4.0'
 
 group :development, :test do
