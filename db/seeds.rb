@@ -67,20 +67,17 @@ french_bread = peter.recipes.create(name:"French Bread", servings:6)
 pizza_dough = peter.recipes.create(name:"Pizza Dough", servings:6)
 
 
-# Ingredients
+# Ingredients (from ingredients.csv)
 
-ing1 = Ingredient.create(name:"flour", cost:12.50, cost_size:5, cost_unit:"lb")
+
+# Add ingredients to recipes (from recipes.csv)
+# For each recipe, find_by_name, then loop through recipe ingredients to add each ingredient:
+  # recipe.recipe_ingredients.create(ingredient:Ingredient.find_by_name("flour"), ingredient_amount:6.376, ingredient_unit:"oz")
+
 
 
 
 # Add ingredient to recipe
-
-# Cinnamon Raisin Bread
-
-
-
-
-
 r1_ing1 = user1_r1.recipe_ingredients.create(ingredient:ing1, ingredient_amount:6.376, ingredient_unit:"oz")
   # get name with user1_r1.recipe_ingredients.first.ingredient.name
 
