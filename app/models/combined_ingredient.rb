@@ -56,7 +56,7 @@ class CombinedIngredient
     @cost_ratio = @base_cost.to_f / @base_cost_size
 
     # If @amount_unit == @base_cos_unit, no conversion needed. Multiply amount by base_cost
-    if @amount_unit == @base_cost_unit
+    if @amount_unit == @base_cost_unit || @amount_unit == "none"
       @total_cost = (@cost_ratio * @amount).round(2)
   
     # Else convert units to calculate total cost
