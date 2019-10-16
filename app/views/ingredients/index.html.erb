@@ -10,6 +10,7 @@
   <table>
     <thead>
       <tr>
+        <th>ID</th>
         <th>Name</th>
         <th>Cost</th>
         <th>Cost Size</th>
@@ -19,6 +20,7 @@
     <tbody>
       <% @ingredients.each do |ingredient| %>
       <tr>
+        <td><%= ingredient.id %></td>
         <td><%= ingredient.name %></td>
         <td><%= ingredient.cost %></td>
         <td><%= ingredient.cost_size %></td>
