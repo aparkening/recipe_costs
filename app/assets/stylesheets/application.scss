@@ -20,6 +20,11 @@
 body {
   padding-top: 5rem;
 }
+h1 {
+  margin-bottom: 1rem;  
+}
+
+// Navbar
 .navbar-brand {
   margin-right: 0;
 }
@@ -27,7 +32,6 @@ body {
   height: 1.5rem;
   width: 1.5rem;
 }
-
 @include media-breakpoint-up(md) {
   .navbar-brand {
     padding-right: 1rem !important;
