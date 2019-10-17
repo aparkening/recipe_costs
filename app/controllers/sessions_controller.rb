@@ -2,17 +2,19 @@ class SessionsController < ApplicationController
 
   # Display login form
   def new
-    @user = User.all
+    # @user = User.all
   end
 
   # Log user in
   def create
-    @user = User.find(params[:user_name])
+    @user = User.find_by(name: params[:name])
     if @user && @user.authenticate(params[:password])
+      flash[:success] = "Success! Welcome back." 
       session[:user_id] = @user.id
       redirect_to user_path(@user)
     else
-      redirect_to signin_path
+      flash[:error] = "Credentials don't work. Please check your name and password." 
+      redirect_to login_path
     end
   end
 
