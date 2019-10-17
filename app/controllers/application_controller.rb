@@ -12,6 +12,11 @@ class ApplicationController < ActionController::Base
 	end
   helper_method :current_user
   
+def is_admin?
+  @current_user && @current_user.role == "admin"
+end
+helper_method :is_admin?
+
   private
 	 
   def require_login
