@@ -14,14 +14,26 @@
 
  // Custom bootstrap variables must be set or imported *before* bootstrap
  $primary:#002180;
+ 
  @import "bootstrap";
 
 body {
   padding-top: 5rem;
 }
+.navbar-brand {
+  margin-right: 0;
+}
 .navbar-brand img {
   height: 1.5rem;
   width: 1.5rem;
+}
+
+@include media-breakpoint-up(md) {
+  .navbar-brand {
+    padding-right: 1rem !important;
+    border-right: 1px solid #dee2e6 !important;
+    margin-right: 0.5rem;
+  }
 }
 
 
