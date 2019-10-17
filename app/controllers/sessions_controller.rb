@@ -9,7 +9,6 @@ class SessionsController < ApplicationController
   def create
     @user = User.find_by(name: params[:name])
     if @user && @user.authenticate(params[:password])
-      flash[:success] = "Success! Welcome back." 
       session[:user_id] = @user.id
       redirect_to user_path(@user)
     else
@@ -20,7 +19,7 @@ class SessionsController < ApplicationController
 
   # Log user out
   def destroy
-    flash[:success] = "Successfully logged out" 
+    flash[:notice] = "Successfully logged out" 
     session.clear
     redirect_to root_path
   end
