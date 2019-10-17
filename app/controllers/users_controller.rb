@@ -14,14 +14,17 @@ class UsersController < ApplicationController
   
   # Create user
   def create
-    params[:user][:admin] = "true" if params[:user][:admin] && params[:user][:admin] == "1"
+    # params[:user][:admin] = "true" if params[:user][:role] && params[:user][:role] == "admin"
 
     @user = User.new(user_params)
     if @user.save
-      session[:user_id] = @user.id
+      # Set session if current user isn't an admin
+      session[:user_id] = @user.id if !is_admin?
       redirect_to user_path(@user)
     else
-      flash[:error] = "Credentials don't work" 
+      flash[:error] = @user.errors.full_messages
+      # flash[:error] = "Credentials don't work" 
+      # redirect_to new_user_path, error: "Credentials don't work. Please ensure your passwords match."
       redirect_to new_user_path
     end
   end
@@ -29,7 +32,7 @@ class UsersController < ApplicationController
   private
  
   def user_params
-    params.require(:user).permit(:name, :password, :height, :happiness, :nausea, :tickets, :admin)
+    params.require(:user).permit(:name, :password, :password_confirmation, :organization, :role)
   end
   
 end

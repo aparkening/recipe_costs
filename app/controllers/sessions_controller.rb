@@ -2,7 +2,7 @@ class SessionsController < ApplicationController
 
   # Display login form
   def new
-    # @user = User.all
+    @user = User.all
   end
 
   # Log user in
@@ -12,16 +12,14 @@ class SessionsController < ApplicationController
       session[:user_id] = @user.id
       redirect_to user_path(@user)
     else
-      flash[:error] = "Credentials don't work. Please check your name and password." 
-      redirect_to login_path
+      redirect_to login_path, error: "Credentials don't work. Please check your name and password." 
     end
   end
 
   # Log user out
   def destroy
-    flash[:notice] = "Successfully logged out" 
     session.clear
-    redirect_to root_path
+    redirect_to root_path, notice: "Successfully logged out"
   end
 
 end
