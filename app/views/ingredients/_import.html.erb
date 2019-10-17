@@ -1,7 +1,14 @@
-  <div>
-    <h2>Import more data</h2>
+<div class="border rounded-sm p-3 mb-2">
+  <fieldset>
+    <legend>Import more data</legend>
     <%= form_tag path, multipart: true do %>
-      <%= file_field_tag :file %>
-      <%= submit_tag "Import CSV" %>
+      <div class="form-group">
+        <label for="file">File to Upload</label>
+        <%= file_field_tag :file, class: 'form-control-file' %>
+      </div>
+      <div class="form-group">
+        <%= submit_tag "Import CSV", class: 'btn btn-info' %>
+      </div>
     <% end %>
-  </div>
+  </fieldset>
+</div>

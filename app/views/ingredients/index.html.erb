@@ -2,33 +2,28 @@
 
 <%= flash[:notice] %>
 
-<div class="container">
+<%= render "import", path: "ingredients_import_path" %>
 
-  <%= render "import", path: "ingredients_import_path" %>
-  
-  <h2>Current Ingredients</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Cost</th>
-        <th>Cost Size</th>
-        <th>Cost Unit</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @ingredients.each do |ingredient| %>
-      <tr>
-        <td><%= ingredient.id %></td>
-        <td><%= ingredient.name %></td>
-        <td><%= ingredient.cost %></td>
-        <td><%= ingredient.cost_size %></td>
-        <td><%= ingredient.cost_unit %></td>
-      </tr>  
-      <% end %>
-    </tbody>  
-  </table>
-
-</div>
-
+<h2>Current Ingredients</h2>
+<table class="table table-striped">
+  <thead class="thead-dark">
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Cost</th>
+      <th>Cost Size</th>
+      <th>Cost Unit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @ingredients.each do |ingredient| %>
+    <tr>
+      <th scope="row"><%= ingredient.id %></th>
+      <td><%= ingredient.name %></td>
+      <td>$ <%= ingredient.cost %></td>
+      <td><%= ingredient.cost_size %></td>
+      <td><%= ingredient.cost_unit %></td>
+    </tr>  
+    <% end %>
+  </tbody>  
+</table>
