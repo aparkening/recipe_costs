@@ -22,17 +22,19 @@
       <div class="collapse navbar-collapse" id="navbarsExampleDefault">
         <ul class="navbar-nav mr-auto">
           <li class="nav-item active">
-            <a class="nav-link" href="/">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-link" href="<%= root_url %>">Home</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-          </li>          
+          <% if current_user %>
+            <li class="nav-item">
+              <%= link_to "Log Out", logout_path, class: "nav-link" %>
+            </li>
+            <% else %>
+              <li class="nav-item">
+              <a class="nav-link" href="<%= new_user_path %>"/>Sign Up</a>
+              <li class="nav-item">
+              <a class="nav-link" href="<%= login_path %>"/>Log In</a>
+            </li>
+          <% end %>
         </ul>
         <form class="form-inline my-2 my-lg-0">
           <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
@@ -43,6 +45,7 @@
 
     <main role="main" class="container">
 
+      <%= render "application/flash", flash: flash %>
       <%= yield %>
 
     </main><!-- /.container -->
