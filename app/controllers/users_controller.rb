@@ -20,16 +20,21 @@ class UsersController < ApplicationController
   
   # Create user
   def create
-    # params[:user][:admin] = "true" if params[:user][:role] && params[:user][:role] == "admin"
+    params[:user][:admin] = "true" if params[:user][:admin] && params[:user][:admin] == "1"
 
     @user = User.new(user_params)
     if @user.save
       # Set session if current user isn't an admin
-      session[:user_id] = @user.id if !is_admin?
-      redirect_to user_path(@user)
+      if is_admin?
+        redirect_to users_path, notice: "#{@user.name} successfully created."
+      else 
+        session[:user_id] = @user.id
+        redirect_to user_path(@user)
+      end
     else
-      # flash[:error] = @user.errors.full_messages
-      redirect_to new_user_path, error: "Credentials don't work. Please ensure your passwords match."
+      flash[:error] = @user.errors.full_messages
+      redirect_to new_user_path
+      # redirect_to new_user_path, error: "Credentials don't work. Please ensure your passwords match."
     end
   end
  
@@ -41,9 +46,14 @@ class UsersController < ApplicationController
     if user_authorized?(@user)
       @user.update(user_params)
       if @user.save
-        redirect_to @user
+        # Set session if current user isn't an admin
+        if is_admin?
+          redirect_to users_path, notice: "#{@user.name} successfully updated."
+        else 
+          redirect_to @user, notice: "Success! You're updated."
+        end
       else
-        render :edit
+        render :edit, error: "Credentials don't work. Please ensure your passwords match."
       end
     else
       redirect_to root_path, error: "You're not authorized to change this resource."

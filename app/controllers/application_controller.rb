@@ -14,13 +14,13 @@ class ApplicationController < ActionController::Base
   
   # Determine if current user is admin
   def is_admin?
-    current_user && current_user.role == "admin"
+    current_user && current_user.admin
   end
   helper_method :is_admin?
 
   # Raise errors if user doesn't have permissions to access
   def user_authorized?(user)
-    raise AuthorizationError.new if user != current_user || !is_admin?
+    user == current_user || is_admin?
   end
 
   private

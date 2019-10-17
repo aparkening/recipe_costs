@@ -18,11 +18,11 @@
   </div>
   <% if is_admin? %>
     <div class="form-group">
-      <%= f.label(:admin, "Is this person an administrator?") %>
+      <%= f.label(:admin, "Admin user?") %>
       <%= f.check_box :admin %>
     </div>
   <% end %>
   <div class="form-group">
-    <%= f.submit "Create User", class:'btn btn-lg btn-primary' %>
+    <%= f.submit class:'btn btn-lg btn-primary' %>
   </div>
 <% end %>
