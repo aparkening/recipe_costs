@@ -6,6 +6,6 @@ class IngredientsController < ApplicationController
   # Ingredient import page
   def import
     Ingredient.import(params[:file])
-    redirect_to ingredients_index_path, notice: "File successfully imported"
+    redirect_to ingredients_index_path, notice: "Success! File imported."
   end
 end
