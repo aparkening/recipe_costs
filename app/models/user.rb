@@ -11,6 +11,6 @@ class User < ApplicationRecord
   # Validations
   validates :name, presence: true, uniqueness: true
   validates :password_digest, presence: true, on: :create
-  validates :password_digest, length: { minimum: 6 }, confirmation: true, unless: ->(u){ u.password.blank? }
+  validates :password, length: { minimum: 6 }, confirmation: true, unless: ->(u){ u.password.blank? }
   validates :password_confirmation, presence: true, on: :create
 end
