@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
 
   # Display root page. If current user, show user page.
   def index
-    redirect_to @current_user if current_user
+    # redirect_to @current_user if current_user
   end
 
   # Set current user
@@ -23,10 +23,16 @@ class ApplicationController < ActionController::Base
     user == current_user || is_admin?
   end
 
+  # Raise error if user not authorized
+  def require_authorization(user)
+    return head(:forbidden) unless current_user == user || is_admin? 
+  end 
+  helper_method :require_authorization
+
   private
 	 
   def require_login
-    redirect_to root_path unless current_user
+    return head(:forbidden) unless current_user
   end
 
 end

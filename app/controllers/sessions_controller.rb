@@ -2,7 +2,7 @@ class SessionsController < ApplicationController
 
   # Display login form
   def new
-    @user = User.all
+    @user = User.new
   end
 
   # Log user in

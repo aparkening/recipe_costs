@@ -2,10 +2,21 @@ class UsersController < ApplicationController
   before_action :require_login
   skip_before_action :require_login, only: [:new, :create]
 
+  # Display all users
+  def index
+    if is_admin?
+      @users = User.all.order(name: :asc)
+    else
+      return head(:forbidden)
+      # redirect_to root_path, error: "You're not authorized to see this resource."
+    end
+  end
+
   # Display user page
   def show
     @user = User.find(params[:id])
-    redirect_to root_path if current_user != @user || !is_admin?
+    # Redirect if not user or admin  
+    require_authorization(@user)
   end
 
   # Display signup form
@@ -16,6 +27,7 @@ class UsersController < ApplicationController
   # Display edit form
   def edit
     @user = User.find(params[:id])
+    require_authorization(@user)
   end
   
   # Create user
@@ -40,6 +52,8 @@ class UsersController < ApplicationController
  
   # Edit user
   def update
+    params[:user][:admin] = "true" if params[:user][:admin] && params[:user][:admin] == "1"
+
     @user = User.find(params[:id])
 
     # Ensure edits are made by owner or admin user
@@ -47,13 +61,15 @@ class UsersController < ApplicationController
       @user.update(user_params)
       if @user.save
         # Set session if current user isn't an admin
-        if is_admin?
-          redirect_to users_path, notice: "#{@user.name} successfully updated."
-        else 
+        if @user == current_user
           redirect_to @user, notice: "Success! You're updated."
+        else 
+          redirect_to users_path, notice: "#{@user.name} successfully updated."
         end
       else
-        render :edit, error: "Credentials don't work. Please ensure your passwords match."
+        flash[:error] = @user.errors.full_messages
+        # flash[:error] = "Credentials don't work. Please ensure your passwords match."
+        render :edit
       end
     else
       redirect_to root_path, error: "You're not authorized to change this resource."
@@ -77,7 +93,7 @@ class UsersController < ApplicationController
   private
  
   def user_params
-    params.require(:user).permit(:name, :password, :password_confirmation, :organization, :role)
+    params.require(:user).permit(:name, :password, :password_confirmation, :organization, :admin)
   end
   
 end
