@@ -13,4 +13,13 @@ class User < ApplicationRecord
   validates :password_digest, presence: true, on: :create
   validates :password, length: { minimum: 6 }, confirmation: true, unless: ->(u){ u.password.blank? }
   validates :password_confirmation, presence: true, on: :create
+
+  def self.from_omniauth(auth)
+    # Creates a new user only if it doesn't exist
+    where(email: auth.info.email).first_or_initialize do |user|
+      user.name = auth.info.name
+      user.email = auth.info.email
+    end
+  end
+
 end
