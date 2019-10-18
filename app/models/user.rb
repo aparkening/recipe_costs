@@ -10,15 +10,24 @@ class User < ApplicationRecord
   
   # Validations
   validates :name, presence: true, uniqueness: true
-  validates :password_digest, presence: true, on: :create
-  validates :password, length: { minimum: 6 }, confirmation: true, unless: ->(u){ u.password.blank? }
-  validates :password_confirmation, presence: true, on: :create
+  validates :password, presence: true, on: :create
+  validates :password, length: { minimum: 6 }, on: :create
+  
+  # , confirmation: true, unless: ->(u){ u.password.blank? }
 
-  def self.from_omniauth(auth)
+  def self.find_or_create_by_omniauth(auth)
     # Creates a new user only if it doesn't exist
     where(name: auth.info.name).first_or_initialize do |user|
-      user.name = auth.info.name
+      user.name ||= auth.info.name
       user.email = auth.info.email
+
+      if !user.password_digest
+        pass = SecureRandom.hex(30)
+        user.password = pass
+        user.password_confirmation = pass
+      end
+
+      user.save
     end
   end
 
