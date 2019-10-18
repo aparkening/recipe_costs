@@ -64,17 +64,17 @@ class RecipesController < ApplicationController
   # Display update form
   def edit
     if params[:user_id]
-      user = User.find_by(id: params[:user_id])
+      @user = User.find_by(id: params[:user_id])
       
       # Require authorization
-      require_authorization(user)
+      require_authorization(@user)
 
-      if user.nil?
+      if @user.nil?
         flash[:error] = "User not found."
         redirect_to root_path
       else
-        @recipe = user.recipes.find_by(id: params[:id])
-        redirect_to user_recipes_path(user), alert: "Recipe not found." if @recipe.nil?
+        @recipe = @user.recipes.find_by(id: params[:id])
+        redirect_to user_recipes_path(@user), alert: "Recipe not found." if @recipe.nil?
       end
     else
       flash[:error] = "Recipes need a user."
@@ -87,14 +87,18 @@ class RecipesController < ApplicationController
     if params[:user_id]
       user = User.find_by(id: params[:user_id])
     
-      @recipe = Recipe.find(params[:id])
+      # Require authorization
+      require_authorization(user)
 
-      @recipe.update(recipe_params)
+      recipe = Recipe.find(params[:id])
+      recipe.update(recipe_params)
 
-      if @recipe.save
-        redirect_to @Recipe
+      if recipe.save
+        flash[:success] = "Success! Recipe updated."
+        redirect_to user_recipe_path(user, recipe)
       else
-        render :edit
+        flash[:error] = recipe.errors.full_messages
+        redirect_to edit_user_recipe_path(user, recipe)
       end
     else
       flash[:alert] = "Recipes need a user."
