@@ -1,5 +1,7 @@
 <h1><%= @recipe.name %></h1>
-<div class="change"><%= link_to 'Edit recipe name/servings', edit_user_recipe_path(@user) %> | <%= link_to "Delete", user_recipe_path(@user, @recipe), method: :delete, data: { confirm: "Are you sure?" } %></div>
+<div class="helper_links"><%= link_to 'Edit recipe name/servings', edit_user_recipe_path(@user) %> | <%= link_to "Delete", user_recipe_path(@user, @recipe), method: :delete, data: { confirm: "Are you sure?" } %></div>
+
+Ingredients go here
 
 
 <%= link_to "All your recipes", user_recipes_path(@user) %>
