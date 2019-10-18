@@ -42,7 +42,6 @@ h1 {
 
 
 // Login styles
-
 .form-signin {
   width: 100%;
   max-width: 330px;
@@ -68,4 +67,9 @@ h1 {
   margin-bottom: 10px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
+}
+img.google-signin {
+  width: 200px;
+  display: block;
+  margin: 0 auto 0.5rem;
 }
