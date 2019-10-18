@@ -36,7 +36,7 @@ gem 'jquery-rails'
 gem 'bootstrap', '>= 4.0'
 
 # Google Oauth2
-gem 'omniauth'
+# gem 'omniauth'
 gem 'omniauth-google-oauth2'
 
 # Env file

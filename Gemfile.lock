@@ -265,7 +265,6 @@ DEPENDENCIES
   jquery-rails
   listen (>= 3.0.5, < 3.2)
   measured
-  omniauth
   omniauth-google-oauth2
   pry
   puma (~> 3.11)
