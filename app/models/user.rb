@@ -12,13 +12,24 @@ class User < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :password, presence: true, on: :create
   validates :password, length: { minimum: 6 }, on: :create
-  
-  # , confirmation: true, unless: ->(u){ u.password.blank? }
+  validates :email, presence: true, length: { minimum: 5 }
+  validates :email, uniqueness: { case_sensitive: false }
+  validate :email_must_be_valid
 
+  # Email must have @ 
+  def email_must_be_valid
+      errors.add(:email, "must be valid") unless email.include?(".") and email.include?("@")
+  end
+
+  # Find or create user by Omniauth
   def self.find_or_create_by_omniauth(auth)
+
+# binding.pry
+
     # Creates a new user only if it doesn't exist
-    where(name: auth.info.name).first_or_initialize do |user|
-      user.name ||= auth.info.name
+    where(uid: auth.uid).first_or_initialize do |user|
+      user.uid ||= auth.uid
+      user.name = auth.info.name
       user.email = auth.info.email
 
       if !user.password_digest

@@ -1,5 +1,10 @@
+<h1>Log in</h1>
+
+<%= link_to image_tag("/images/btn_google_signin_dark_normal_web@2x.png", class:"google-signin"), "/auth/google_oauth2" %>
+
+<p>-or-</p>
+
 <%= form_with url: "/login", class: "form-signin", local: true do |f| %>
-  <h1 class="h3 mb-3 font-weight-normal">Please log in</h1>
 
   <%= f.label :name, class:'sr-only' %>
   <%= f.text_field :name, class:'form-control', placeholder:'Name', required:true  %>
@@ -7,7 +12,3 @@
   <%= f.password_field :password, class:'form-control', placeholder:'Password', required:true %>
   <%= f.submit "Log In", class:'btn btn-lg btn-primary btn-block' %>
 <% end %>
-
-<p class="text-center">-or-</p>
-
-<%= link_to image_tag("/images/btn_google_signin_dark_normal_web@2x.png", class:"google-signin"), "/auth/google_oauth2" %>

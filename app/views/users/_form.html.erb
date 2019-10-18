@@ -19,7 +19,7 @@
       <%= f.password_field :password_confirmation, class:'form-control'  %>
     </div>
   <% end %>
-  
+
   <% if is_admin? %>
     <div class="form-group">
       <%= f.label(:admin, "Admin user?") %>
@@ -27,6 +27,6 @@
     </div>
   <% end %>
   <div class="form-group">
-    <%= f.submit class:'btn btn-lg btn-primary' %>
+    <%= f.submit class:'btn btn-lg btn-primary btn-block' %>
   </div>
 <% end %>
