@@ -12,14 +12,8 @@ class User < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :password, presence: true, on: :create
   validates :password, length: { minimum: 6 }, on: :create
-  validates :email, presence: true, length: { minimum: 5 }
-  validates :email, uniqueness: { case_sensitive: false }
-  validate :email_must_be_valid
+  validates :email, uniqueness: true, allow_blank: true
 
-  # Email must have @ 
-  def email_must_be_valid
-      errors.add(:email, "must be valid") unless email.include?(".") and email.include?("@")
-  end
 
   # Find or create user by Omniauth
   def self.find_or_create_by_omniauth(auth)
