@@ -8,9 +8,18 @@ class Recipe < ApplicationRecord
 
   # Validations
   validates :name, presence: true
+  validates :name, uniqueness: { 
+    scope: %i[user_id],
+    message: 'must be unique.' 
+  }
+
+  # Scope to return user's recipes
+  scope :users_recipes, -> (user) {where(user_id: user.id)}
+  
+  # Scope to return user's recipes by ingredient
+  scope :recipes_of_ingredient, -> (ingredient) { joins(:ingredients).where(ingredients: {id: ingredient.id}) }
 
 
-  ## Scope to return user's recipes by ingredient
 
   # This works:
   # ing1.recipes.where(user: user1)
@@ -28,11 +37,6 @@ class Recipe < ApplicationRecord
   # WHERE "recipe_ingredients"."ingredient_id" = ?
   #   AND "recipes"."user_id" = ? 
   # LIMIT ?  [["ingredient_id", 1], ["user_id", 1], ["LIMIT", 11]]
-
-  # As scope
-  scope :users_recipes, -> (user) {where(user_id: user.id)}
-  scope :recipes_of_ingredient, -> (ingredient) { joins(:ingredients).where(ingredients: {id: ingredient.id}) }
-
 
 
 
