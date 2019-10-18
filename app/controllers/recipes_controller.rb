@@ -40,7 +40,8 @@ class RecipesController < ApplicationController
   # Display new form
   def new
     if params[:user_id] && !User.exists?(params[:user_id])
-      redirect_to users_path, alert: "user not found."
+      flash[:error] = "User not found."
+      redirect_to users_path
     else
       @user = User.find_by(id: params[:user_id])
       @recipe = Recipe.new(user_id: params[:user_id])
@@ -55,8 +56,8 @@ class RecipesController < ApplicationController
     if recipe.save
       redirect_to user_recipe_path(user, recipe)
     else
-
-      render :new
+      flash[:error] = recipe.errors.full_messages
+      redirect_to new_user_recipe_path(user, recipe)
     end
   end
 
@@ -69,14 +70,14 @@ class RecipesController < ApplicationController
       require_authorization(user)
 
       if user.nil?
-        flash[:alert] = "User not found."
+        flash[:error] = "User not found."
         redirect_to root_path
       else
         @recipe = user.recipes.find_by(id: params[:id])
         redirect_to user_recipes_path(user), alert: "Recipe not found." if @recipe.nil?
       end
     else
-      flash[:alert] = "Recipes need a user."
+      flash[:error] = "Recipes need a user."
       redirect_to root_path
     end
   end

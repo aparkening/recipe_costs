@@ -20,7 +20,6 @@ class Recipe < ApplicationRecord
   scope :recipes_of_ingredient, -> (ingredient) { joins(:ingredients).where(ingredients: {id: ingredient.id}) }
 
 
-
   # This works:
   # ing1.recipes.where(user: user1)
 
