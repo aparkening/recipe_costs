@@ -1,6 +1,8 @@
 <%= form_with url: "/login", class: "form-signin", local: true do |f| %>
   <h1 class="h3 mb-3 font-weight-normal">Please log in</h1>
 
+  <%= link_to('Log in with Google!', '/auth/google') %>
+
   <%= f.label :name, class:'sr-only' %>
   <%= f.text_field :name, class:'form-control', placeholder:'Name', required:true  %>
   <%= f.label :password, class:'sr-only' %>
