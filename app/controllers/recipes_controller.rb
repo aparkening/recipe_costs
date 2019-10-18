@@ -25,10 +25,10 @@ class RecipesController < ApplicationController
       @recipe = Recipe.find(params[:id])
     elsif params[:user_id]
       @user = User.find_by(id: params[:user_id])
-      @recipe = @user.recipes.find_by(id: params[:id])
-    else
-      # User not authorized to see this 
+      # Require authorization
+      require_authorization(@user)
 
+      @recipe = @user.recipes.find_by(id: params[:id])
     end
 
     if @recipe.nil?
