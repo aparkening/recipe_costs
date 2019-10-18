@@ -13,7 +13,7 @@ Rails.application.routes.draw do
   post 'ingredients/import'
 
   # Google authentication
-  get 'auth/:provider/callback', to: 'sessions#googleAuth'
+  get 'auth/google/callback', to: 'sessions#googleAuth'
   get 'auth/failure', to: redirect('/')
 
 
