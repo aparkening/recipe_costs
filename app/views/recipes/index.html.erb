@@ -1,0 +1,7 @@
+<ul>
+<% @recipes.each do |recipe| %>
+  <li><%= display_artist(recipe) %> - <%= link_to recipe.name, user_recipe_path(recipe) %></li>
+<% end %>
+</ul>
+<br>
+<%= link_to "Add New recipe", new_user_recipe_path(@user) %>
