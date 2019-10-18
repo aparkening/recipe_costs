@@ -14,11 +14,8 @@ class User < ApplicationRecord
   validates :password, length: { minimum: 6 }, on: :create
   validates :email, uniqueness: true, allow_blank: true
 
-
   # Find or create user by Omniauth
   def self.find_or_create_by_omniauth(auth)
-
-# binding.pry
 
     # Creates a new user only if it doesn't exist
     where(uid: auth.uid).first_or_initialize do |user|
