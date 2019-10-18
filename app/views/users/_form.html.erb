@@ -7,15 +7,19 @@
     <%= f.label :organization %>
     <%= f.text_field :organization, class:'form-control' %>
   </div>  
-  <div class="form-group">
-    <%= f.label :password %>
-    <%= f.password_field :password, class:'form-control'  %>
-    <small id="emailHelp" class="form-text text-muted">Must contain more than 6 characters.</small>
-  </div>
-  <div class="form-group">
-    <%= f.label :password_confirmation, 'Confirm Password' %>
-    <%= f.password_field :password_confirmation, class:'form-control'  %>
-  </div>
+
+  <% if @user.new_record? %>
+    <div class="form-group">
+      <%= f.label :password %>
+      <%= f.password_field :password, class:'form-control'  %>
+      <small id="emailHelp" class="form-text text-muted">Must contain more than 6 characters.</small>
+    </div>
+    <div class="form-group">
+      <%= f.label :password_confirmation, 'Confirm Password' %>
+      <%= f.password_field :password_confirmation, class:'form-control'  %>
+    </div>
+  <% end %>
+  
   <% if is_admin? %>
     <div class="form-group">
       <%= f.label(:admin, "Admin user?") %>
