@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
 
   # Display root page. If current user, show user page.
   def index
-    # redirect_to @current_user if current_user
+    redirect_to @current_user if current_user
   end
 
   # Set current user
