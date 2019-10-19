@@ -12,7 +12,7 @@ Rails.application.routes.draw do
   get '/logout' => 'sessions#destroy'
 
   # Ingredients
-  resources :ingredients, only: [:index, :new, :create, :edit, :update]
+  resources :ingredients, only: [:index, :new, :create, :edit, :update, :destroy]
   post 'ingredients/import'
 
   # Google authentication
