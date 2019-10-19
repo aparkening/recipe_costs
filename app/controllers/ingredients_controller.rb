@@ -14,6 +14,8 @@ class IngredientsController < ApplicationController
 
   # Create record
   def create
+    # Make name lowercase
+    params[:ingredient][:name] = params[:ingredient][:name].downcase
     ingredient = Ingredient.new(ing_params)
     if ingredient.save
       redirect_to ingredients_path
@@ -30,6 +32,8 @@ class IngredientsController < ApplicationController
 
   # Update record
   def update
+    # Make name lowercase
+    params[:ingredient][:name] = params[:ingredient][:name].downcase
     @ingredient.update(ing_params)
 
     if @ingredient.save
@@ -41,7 +45,7 @@ class IngredientsController < ApplicationController
     end  
   end
 
-  # Ingredient import page
+  # Import CSVs
   def import
     Ingredient.import(params[:file])
     redirect_to ingredients_path, notice: "Success! File imported."
