@@ -4,8 +4,7 @@ Rails.application.routes.draw do
   resources :users do
     resources :recipes
   end
-
-  # resources :recipes
+  resources :recipes, only: :index
 
   # Session
   get '/login' => 'sessions#new'
@@ -13,7 +12,7 @@ Rails.application.routes.draw do
   get '/logout' => 'sessions#destroy'
 
   # Ingredients
-  get 'ingredients/index'
+  resources :ingredients, only: [:index, :new, :create, :edit, :update]
   post 'ingredients/import'
 
   # Google authentication
