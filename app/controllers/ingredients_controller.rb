@@ -1,5 +1,6 @@
 class IngredientsController < ApplicationController
   before_action :require_admin
+  before_action :set_ing, only: [:edit, :update, :destroy]
 
   # All records
   def index
@@ -8,11 +9,7 @@ class IngredientsController < ApplicationController
 
   # Display new form
   def new
-    if is_admin?
-      @ingredient = Ingredient.new
-    else 
-      redirect_to root_path
-    end
+    @ingredient = Ingredient.new
   end
 
   # Create record
@@ -25,31 +22,45 @@ class IngredientsController < ApplicationController
       redirect_to new_ingredient_path
       # render 'new'
     end
-
   end
 
   # Display edit form
   def edit
-
   end
 
   # Update record
   def update
+    @ingredient.update(ing_params)
+
+    if @ingredient.save
+      flash[:success] = "Success! #{@ingredient.name.capitalize} updated."
+      redirect_to ingredients_path
+    else
+      flash[:error] = @ingredient.errors.full_messages
+      redirect_to edit_ingredient_path(@ingredient)
+    end  
   end
 
   # Ingredient import page
   def import
     Ingredient.import(params[:file])
-    redirect_to ingredients_index_path, notice: "Success! File imported."
+    redirect_to ingredients_path, notice: "Success! File imported."
   end
 
   # Delete record
   def destroy
-
+    ingredient = Ingredient.find(params[:id])
+    ingredient.destroy
+    flash[:notice] = "Ingredient deleted."
+    redirect_to ingredients_path
   end
 
 
   private
+
+  def set_ing
+    @ingredient = Ingredient.find(params[:id])
+  end
 
   def ing_params
     params.require(:ingredient).permit(:name, :cost, :cost_size, :cost_unit)
