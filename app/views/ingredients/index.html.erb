@@ -1,26 +1,28 @@
 <h1>Ingredients</h1>
 
-<%= render "import", path: "ingredients_import_path" %>
+<%= render "import", path: ingredients_import_path %>
 
 <h2>Current Ingredients</h2>
 <table class="table table-striped">
   <thead class="thead-dark">
     <tr>
-      <th>ID</th>
+      <th>Links</th>
       <th>Name</th>
       <th>Cost</th>
       <th>Cost Size</th>
       <th>Cost Unit</th>
+      <th>ID</th>
     </tr>
   </thead>
   <tbody>
     <% @ingredients.each do |ingredient| %>
     <tr>
-      <th scope="row"><%= ingredient.id %></th>
-      <td><%= ingredient.name %></td>
+      <th><small><%= link_to 'Edit', edit_ingredient_path(ingredient), class:'text-muted' %> | <%= link_to "Delete", ingredient, method: :delete, class:'text-muted', data: { confirm: "Are you sure?" } %></small></th>
+      <th scope="row"><%= ingredient.name %></td>
       <td>$ <%= ingredient.cost %></td>
       <td><%= ingredient.cost_size %></td>
       <td><%= ingredient.cost_unit %></td>
+      <td><%= ingredient.id %></th>
     </tr>  
     <% end %>
   </tbody>  
