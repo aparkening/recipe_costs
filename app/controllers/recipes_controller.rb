@@ -4,7 +4,9 @@ class RecipesController < ApplicationController
   # Display all user's recipes
   def index
     if is_admin?
-      @recipes = Recipe.all
+      # @recipes = Recipe.all
+      @user = User.find_by(id: params[:user_id])
+      @recipes = @user.recipes
     elsif params[:user_id]
       @user = User.find_by(id: params[:user_id])
       if @user.nil?
@@ -23,6 +25,7 @@ class RecipesController < ApplicationController
   def show
     if is_admin?
       @recipe = Recipe.find(params[:id])
+      @user = @recipe.user
     elsif params[:user_id]
       @user = User.find_by(id: params[:user_id])
       # Require authorization

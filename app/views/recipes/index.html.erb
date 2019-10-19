@@ -1,9 +1,13 @@
-<h1><%= @user.name %> Recipes</h1>
-<div class="helper_links"><%= link_to "Add new recipe", new_user_recipe_path(@user) %></div>
+<% if is_admin? %>
+  <h1>Recipes</h1>
+<% else %>
+  <h1><%= @user.name %> Recipes</h1>
+  <div class="helper_links"><%= link_to "Add new recipe", new_user_recipe_path(@user) %></div>
+<% end %>
 
 <ul>
 <% @recipes.each do |recipe| %>
-  <li><%= link_to recipe.name, user_recipe_path(@user, recipe) %> - <small><%= link_to 'Edit name/servings', edit_user_recipe_path(@user, recipe), class:'text-muted' %> | <%= link_to "Delete", user_recipe_path(@user, recipe), method: :delete, class:'text-muted', data: { confirm: "Are you sure?" } %></small></li>
+  <li><%= link_to recipe.name, user_recipe_path(@user, recipe) %> - <small><%= link_to 'Edit name/servings', edit_user_recipe_path(@user, recipe), class:'text-muted' %> | <%= link_to "Delete", user_recipe_path(recipe.user, recipe), method: :delete, class:'text-muted', data: { confirm: "Are you sure?" } %></small></li>
 <% end %>
 </ul>
 
