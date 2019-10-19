@@ -1,5 +1,5 @@
 class IngredientsController < ApplicationController
-  before_action :require_login
+  before_action :require_admin
 
   # All records
   def index
@@ -30,7 +30,7 @@ class IngredientsController < ApplicationController
 
   # Display edit form
   def edit
-    
+
   end
 
   # Update record
