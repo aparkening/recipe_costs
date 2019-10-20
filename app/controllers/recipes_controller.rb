@@ -65,7 +65,7 @@ class RecipesController < ApplicationController
     if @recipe.save
       redirect_to user_recipe_path(user, @recipe)
     else
-      flash[:error] = @recipe.errors.full_messages
+      # flash[:error] = @recipe.errors.full_messages
       # redirect_to new_user_recipe_path(user, recipe)
       render :new
     end
