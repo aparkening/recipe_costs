@@ -66,8 +66,8 @@ class RecipesController < ApplicationController
 
   # Create new
   def create
-    # Set user by params
-    user = User.find_by(id: params[:user_id])
+    redirect_non_users
+    @user = User.find_by(id: params[:user_id])
 
     # Ensure current user can create for user
     require_authorization(user)
