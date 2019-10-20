@@ -40,6 +40,10 @@ class Recipe < ApplicationRecord
 
       # Create record
       recipe = Recipe.find_by_name(recipe_name)
+      if !recipe
+        recipe = user.recipes.create(name: recipe_name)
+      end
+
       recipe.recipe_ingredients.create(ingredient: Ingredient.find_by_name(name), ingredient_amount: ingredient_amount, ingredient_unit: ingredient_unit)
 
       recipe.save
