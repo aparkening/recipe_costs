@@ -1,21 +1,22 @@
 Rails.application.routes.draw do
   root 'application#index'
   
+  # Ingredients
+  resources :ingredients
+  post 'ingredients/import'
+
+  # Users, with recipes and user_ingredients
   resources :users do
     resources :recipes
     post 'recipes/import'
-    resources :ingredients, only: [:index, :new, :create, :edit, :update, :destroy] 
+    resources :user_ingredients, as: 'ingredients'
   end
   resources :recipes, only: :index
-  post 'ingredients/import'
-
 
   # Session
   get '/login' => 'sessions#new'
   post '/login' => 'sessions#create'
   get '/logout' => 'sessions#destroy'
-
-
 
   # Google authentication
   get 'auth/:provider/callback', to: 'sessions#googleAuth'
