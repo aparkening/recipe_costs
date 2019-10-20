@@ -1,18 +1,5 @@
 <h1>Create a Recipe</h1>
 
-<% if @recipe.errors.any? %>
-  <div id="error_explanation">
-    <h2>
-      <%= pluralize(@recipe.errors.count, "error") %>
-      prohibited this record from being saved:
-    </h2>
- 
-    <ul>
-    <% @recipe.errors.full_messages.each do |msg| %>
-      <li><%= msg %></li>
-    <% end %>
-    </ul>
-  </div>
-<% end %>
+<%= render "application/errors", object: @recipe %>
 
 <%= render "form", recipe: @recipe, user: @user %>

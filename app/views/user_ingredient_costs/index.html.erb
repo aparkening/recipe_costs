@@ -1,7 +1,8 @@
 <h1>Custom Ingredient Costs</h1>
 
+<div class="helper_links"><%= link_to "Add new cost", new_user_ingredient_path(@user) %></div>
 
-<h2>Current Customizations</h2>
+<h2>Current Ingredients</h2>
 <table class="table table-striped">
   <thead class="thead-dark">
     <tr>
@@ -13,10 +14,14 @@
     </tr>
   </thead>
   <tbody>
-    <% @ingredients.each do |ingredient| %>
+    <% @user_ingredients.each do |ingredient| %>
     <tr>
-      <th><small><%= link_to 'Edit', edit_user_ingredient_cost_path(@user, ingredient), class:'text-muted' %> | <%= link_to "Delete", ingredient, method: :delete, class:'text-muted', data: { confirm: "Are you sure?" } %></small></th>
-      <th scope="row"><%= ingredient.name %></td>
+      <th>
+        <small>
+	        <%= link_to 'Edit', edit_user_ingredient_path(@user, ingredient), class:'text-muted' %> | <%= link_to "Delete", user_ingredient_path(@user, ingredient), method: :delete, class:'text-muted', data: { confirm: "Are you sure?" } %>
+        </small>
+      </th>
+      <th scope="row"><%= ingredient.ingredient.name %></td>
       <td>$ <%= ingredient.cost %></td>
       <td><%= ingredient.cost_size %></td>
       <td><%= ingredient.cost_unit %></td>
