@@ -23,6 +23,14 @@ class ApplicationController < ActionController::Base
     user == current_user || is_admin?
   end
 
+  # Check database for user provided by params. Redirect if none found.
+  def redirect_non_users
+    if params[:user_id] && !User.exists?(params[:user_id])
+      flash[:error] = "User not found."
+      redirect_to users_path
+    end
+  end
+
   # Raise error if user not authorized
   def require_authorization(user)
     return head(:forbidden) unless current_user == user || is_admin? 
