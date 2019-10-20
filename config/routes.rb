@@ -4,17 +4,18 @@ Rails.application.routes.draw do
   resources :users do
     resources :recipes
     post 'recipes/import'
+    resources :ingredients, only: [:index, :new, :create, :edit, :update, :destroy] 
   end
   resources :recipes, only: :index
- 
+  post 'ingredients/import'
+
+
   # Session
   get '/login' => 'sessions#new'
   post '/login' => 'sessions#create'
   get '/logout' => 'sessions#destroy'
 
-  # Ingredients
-  resources :ingredients, only: [:index, :new, :create, :edit, :update, :destroy]
-  post 'ingredients/import'
+
 
   # Google authentication
   get 'auth/:provider/callback', to: 'sessions#googleAuth'
