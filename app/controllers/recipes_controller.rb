@@ -7,12 +7,13 @@ class RecipesController < ApplicationController
       # @recipes = Recipe.all
       @user = User.find_by(id: params[:user_id])
       @recipes = @user.recipes
-    elsif params[:user_id] && @user = User.find_by(id: params[:user_id])
+    elsif params[:user_id] && !User.exists?(params[:user_id])
+      flash[:error] = "User not found."
+      redirect_to users_path
+    else
+      @user = User.find_by(id: params[:user_id])
       @recipes = @user.recipes
       # @recipes = Recipe.recipes_costs(@user)
-    else
-      flash[:alert] = "Recipes need a user."
-      redirect_to root_path
     end
   end
 
@@ -21,7 +22,10 @@ class RecipesController < ApplicationController
     if is_admin?
       @recipe = Recipe.find(params[:id])
       @user = @recipe.user
-    elsif params[:user_id]
+    elsif params[:user_id] && !User.exists?(params[:user_id])
+      flash[:error] = "User not found."
+      redirect_to users_path
+    else
       @user = User.find_by(id: params[:user_id])
       # Require authorization
       require_authorization(@user)
@@ -88,32 +92,31 @@ class RecipesController < ApplicationController
 
   # Display update form
   def edit
-    if params[:user_id]
+    if params[:user_id] && !User.exists?(params[:user_id])
+      flash[:error] = "User not found."
+      redirect_to users_path
+    else
       @user = User.find_by(id: params[:user_id])
-      
+
       # Require authorization
       require_authorization(@user)
 
-      if @user.nil?
-        flash[:error] = "User not found."
-        redirect_to root_path
-      else
-        @recipe = @user.recipes.find_by(id: params[:id])
+      # Find recipe
+      @recipe = @user.recipes.find_by(id: params[:id])
 
-        2.times{ @recipe.recipe_ingredients.build() }
+      # Add two blank ingredients to add more on edit screen
+      2.times{ @recipe.recipe_ingredients.build() }
 
-        redirect_to user_recipes_path(@user), alert: "Recipe not found." if @recipe.nil?
-      end
-    else
-      flash[:error] = "Recipes need a user."
-      redirect_to root_path
+      redirect_to user_recipes_path(@user), alert: "Recipe not found." if @recipe.nil?
     end
   end
 
   # Update record
   def update
-
-    if params[:user_id]
+    if params[:user_id] && !User.exists?(params[:user_id])
+      flash[:error] = "User not found."
+      redirect_to users_path
+    else
       @user = User.find_by(id: params[:user_id])
     
       # Require authorization
@@ -130,25 +133,22 @@ class RecipesController < ApplicationController
         # redirect_to edit_user_recipe_path(user, recipe)
         render :edit
       end
-    else
-      flash[:alert] = "Recipes need a user."
-      redirect_to root_path
     end
   end
 
   # Import CSVs
   # user_recipes_import_path
   def import
-    if params[:user_id]
+    if params[:user_id] && !User.exists?(params[:user_id])
+      flash[:error] = "User not found."
+      redirect_to users_path
+    else
       user = User.find_by(id: params[:user_id])
       require_authorization(user)
 
       Recipe.import(params[:file], user)
 
       redirect_to user_recipes_path(user), notice: "Success! File imported."
-    else
-      flash[:alert] = "User not found."
-      redirect_to root_path
     end
   end
 
