@@ -14,10 +14,10 @@
     <%= f.fields_for :recipe_ingredients do |ing| %>    
       <%= ing.collection_select :ingredient_id, Ingredient.all, :id, :name, {include_blank: true} %>
       
-      <%= ing.label :ingredient_amount %>
+      <%= ing.label :ingredient_amount, 'Amount' %>
       <%= ing.text_field :ingredient_amount %>
       
-      <%= ing.label :ingredient_amount %>
+      <%= ing.label :ingredient_unit, 'Unit' %>
       <%= ing.text_field :ingredient_unit %>
 
       <%= ing.check_box :_destroy %> <%= f.label :_destroy, value: "Remove"%>
