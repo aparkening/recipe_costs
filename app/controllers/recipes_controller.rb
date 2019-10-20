@@ -13,7 +13,8 @@ class RecipesController < ApplicationController
         flash[:alert] = "User not found."
         redirect_to root_path
       else
-        @recipes = @user.recipes
+        # @recipes = @user.recipes
+        @recipes = Recipe.recipes_costs(@user)
       end
     else
       flash[:alert] = "Recipes need a user."
@@ -21,7 +22,7 @@ class RecipesController < ApplicationController
     end
   end
 
-  # Display user's recipe
+  # Display record
   def show
     if is_admin?
       @recipe = Recipe.find(params[:id])
@@ -131,6 +132,12 @@ class RecipesController < ApplicationController
     require_authorization(user)
 
     recipe = Recipe.find(params[:id])
+    
+    # Manually delete recipe_ingredients, since dependet: :destroy isn't working.
+    recipe.recipe_ingredients.each do |ri|
+      ri.destroy
+    end
+
     recipe.destroy
     flash[:notice] = "Recipe deleted."
     redirect_to user_recipes_path(user)
