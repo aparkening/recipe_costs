@@ -1,18 +1,19 @@
 <h1><%= @recipe.name %> (<small class="helper_links"><%= link_to 'Edit ', edit_user_recipe_path(@user) %> | <%= link_to "Delete", user_recipe_path(@user, @recipe), method: :delete, data: { confirm: "Are you sure?" } %></small>)</h1>
 
+<h2>Total Cost: $<%= @recipe_total %></h2>
 
-<h2>
-  <% if @recipe.servings %>
-   Serves <%= @recipe.servings %> |
-  <% end %>
-  Total Cost: <%= @recipe_total %>
-</h2>
 
-<h2>Ingredients</h2>
+<% if @recipe.servings %>
+  <h3>
+    Serves <%= @recipe.servings %> | Cost per serving: $<%= @cost_per_serving %>
+  </h3>
+<% end %>
+
+<h3>Ingredients</h3>
 <table class="table table-striped">
   <thead class="thead-dark">
     <tr>
-      <th>Total Cost</th>
+      <th>Cost</th>
       <th>Name</th>
       <th>Amount</th>
       <th>Amount Unit</th>

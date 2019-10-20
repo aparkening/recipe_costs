@@ -33,18 +33,24 @@ class RecipesController < ApplicationController
       require_authorization(@user)
 
       @recipe = @user.recipes.find_by(id: params[:id])
-      # @recipe_ingredient_costs = {}
+
+      # ** Mark: Make more MVC **
+      # Manually calculate costs
       @recipe_total = 0
-
       @recipe_ingredient_costs = @recipe.recipe_ingredients.map do |ingredient|
+        # Get right ingredient with latest costs
         combo_ingredient = CombinedIngredient.new(ingredient)
-        total_cost = combo_ingredient.total_cost
-      
-        @recipe_total += combo_ingredient.total_cost
 
+        # Get ingredient cost
+        total_cost = combo_ingredient.total_cost
+  
+        # Add to recipe total
+        @recipe_total += combo_ingredient.total_cost
+        
         total_cost
       end 
-      # @recipe_cost = Recipe.recipes_costs(@user)
+      @recipe_total = @recipe_total.round(2)
+      @cost_per_serving = (@recipe_total/@recipe.servings).round(2) if @recipe.servings
     end
 
     if @recipe.nil?
