@@ -107,9 +107,6 @@ class RecipesController < ApplicationController
       require_authorization(@user)
 
       @recipe = Recipe.find(params[:id])
-
-binding.pry
-
       @recipe.update(recipe_params)
 
       if @recipe.save
@@ -146,7 +143,7 @@ binding.pry
   # end
 
   def recipe_params
-    params.require(:recipe).permit(:name, :servings, :user_id, recipe_ingredients_attributes: [:user_id, :ingredient_id, :ingredient_amount, :ingredient_unit])
+    params.require(:recipe).permit(:name, :servings, :user_id, recipe_ingredients_attributes: [:user_id, :ingredient_id, :ingredient_amount, :ingredient_unit, :_destroy, :id])
   end
 
 end

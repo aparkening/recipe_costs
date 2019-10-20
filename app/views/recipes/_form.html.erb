@@ -19,6 +19,8 @@
       
       <%= ing.label :ingredient_amount %>
       <%= ing.text_field :ingredient_unit %>
+
+      <%= ing.check_box :_destroy %> <%= f.label :_destroy, value: "Remove"%>
     <% end %>
 
   </div>
