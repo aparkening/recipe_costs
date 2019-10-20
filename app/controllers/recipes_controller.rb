@@ -7,10 +7,9 @@ class RecipesController < ApplicationController
       # @recipes = Recipe.all
       @user = User.find_by(id: params[:user_id])
       @recipes = @user.recipes
-    elsif params[:user_id] && !User.exists?(params[:user_id])
-      flash[:error] = "User not found."
-      redirect_to users_path
     else
+      redirect_non_users
+      
       @user = User.find_by(id: params[:user_id])
       @recipes = @user.recipes
       # @recipes = Recipe.recipes_costs(@user)
@@ -22,10 +21,8 @@ class RecipesController < ApplicationController
     if is_admin?
       @recipe = Recipe.find(params[:id])
       @user = @recipe.user
-    elsif params[:user_id] && !User.exists?(params[:user_id])
-      flash[:error] = "User not found."
-      redirect_to users_path
     else
+      redirect_non_users
       @user = User.find_by(id: params[:user_id])
       # Require authorization
       require_authorization(@user)
@@ -59,15 +56,12 @@ class RecipesController < ApplicationController
 
   # Display new form
   def new
-    if params[:user_id] && !User.exists?(params[:user_id])
-      flash[:error] = "User not found."
-      redirect_to users_path
-    else
-      @user = User.find_by(id: params[:user_id])
-      @recipe = Recipe.new(user_id: params[:user_id])
+    redirect_non_users
+    @user = User.find_by(id: params[:user_id])
+
+    @recipe = Recipe.new(user_id: params[:user_id])
       
-      10.times{ @recipe.recipe_ingredients.build() }
-    end
+    10.times{ @recipe.recipe_ingredients.build() }
   end
 
   # Create new
@@ -92,68 +86,58 @@ class RecipesController < ApplicationController
 
   # Display update form
   def edit
-    if params[:user_id] && !User.exists?(params[:user_id])
-      flash[:error] = "User not found."
-      redirect_to users_path
-    else
-      @user = User.find_by(id: params[:user_id])
+    redirect_non_users
+    @user = User.find_by(id: params[:user_id])
 
-      # Require authorization
-      require_authorization(@user)
+    # Require authorization
+    require_authorization(@user)
 
-      # Find recipe
-      @recipe = @user.recipes.find_by(id: params[:id])
+    # Find recipe
+    @recipe = @user.recipes.find_by(id: params[:id])
 
-      # Add two blank ingredients to add more on edit screen
-      2.times{ @recipe.recipe_ingredients.build() }
+    # Add two blank ingredients to add more on edit screen
+    2.times{ @recipe.recipe_ingredients.build() }
 
-      redirect_to user_recipes_path(@user), alert: "Recipe not found." if @recipe.nil?
-    end
+    redirect_to user_recipes_path(@user), alert: "Recipe not found." if @recipe.nil?
   end
 
   # Update record
   def update
-    if params[:user_id] && !User.exists?(params[:user_id])
-      flash[:error] = "User not found."
-      redirect_to users_path
-    else
-      @user = User.find_by(id: params[:user_id])
+    redirect_non_users
+    @user = User.find_by(id: params[:user_id])
     
-      # Require authorization
-      require_authorization(@user)
+    # Require authorization
+    require_authorization(@user)
 
-      @recipe = Recipe.find(params[:id])
-      @recipe.update(recipe_params)
+    @recipe = Recipe.find(params[:id])
+    @recipe.update(recipe_params)
 
-      if @recipe.save
-        flash[:success] = "Success! Recipe updated."
-        redirect_to user_recipe_path(@user, @recipe)
-      else
-        # flash[:error] = recipe.errors.full_messages
-        # redirect_to edit_user_recipe_path(user, recipe)
-        render :edit
-      end
+    if @recipe.save
+      flash[:success] = "Success! Recipe updated."
+      redirect_to user_recipe_path(@user, @recipe)
+    else
+      # flash[:error] = recipe.errors.full_messages
+      # redirect_to edit_user_recipe_path(user, recipe)
+      render :edit
     end
   end
 
   # Import CSVs
   # user_recipes_import_path
   def import
-    if params[:user_id] && !User.exists?(params[:user_id])
-      flash[:error] = "User not found."
-      redirect_to users_path
-    else
-      user = User.find_by(id: params[:user_id])
-      require_authorization(user)
+    redirect_non_users
+    
+    user = User.find_by(id: params[:user_id])
+    require_authorization(user)
 
-      Recipe.import(params[:file], user)
+    Recipe.import(params[:file], user)
 
-      redirect_to user_recipes_path(user), notice: "Success! File imported."
-    end
+    redirect_to user_recipes_path(user), notice: "Success! File imported."
   end
 
   # Delete record
   def destroy
+    redirect_non_users
     user = User.find_by(id: params[:user_id])
 
     # Require authorization
@@ -161,7 +145,7 @@ class RecipesController < ApplicationController
 
     recipe = Recipe.find(params[:id])
     
-    # Manually delete recipe_ingredients, since dependet: :destroy isn't working.
+    # Manually delete recipe_ingredients, since dependent: :destroy isn't working.
     recipe.recipe_ingredients.each do |ri|
       ri.destroy
     end
