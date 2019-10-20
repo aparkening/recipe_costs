@@ -1,12 +1,14 @@
 class Recipe < ApplicationRecord
+  attr_accessor :total_cost, :per_serving_cost
+
   # Relationships
   belongs_to :user
   has_many :category_recipes
   has_many :categories, through: :category_recipes
-  has_many :recipe_ingredients
+  has_many :recipe_ingredients, dependent: :destroy
   has_many :ingredients, through: :recipe_ingredients
 
-  accepts_nested_attributes_for :recipe_ingredients, reject_if: proc { |attributes| attributes['ingredient_id'].blank? }, allow_destroy: true
+  accepts_nested_attributes_for :recipe_ingredients, reject_if: proc { |attributes| attributes['ingredient_id'].blank? || attributes['ingredient_amount'].blank? || attributes['ingredient_unit'].blank?}, allow_destroy: true
 
   # Validations
   validates :name, presence: true
@@ -24,22 +26,28 @@ class Recipe < ApplicationRecord
     # call with Recipe.recipes_of_ingredient(ingredient)
 
 
-  # This works:
-  # ing1.recipes.where(user: user1)
+  # Determine recipe cost
+  def self.recipes_costs(user)
+    recipes = Recipe.users_recipes(user)
+    recipe_total = 0
 
-  # This works:
-  # def self.recipes_of_ingredient(ingredient, user)
-  #   Recipe.where(user_id: user.id).joins(:ingredients).where(ingredients: {id: ingredient.id})
-  # end
+    recipes.map do |recipe|
+      recipe.recipe_ingredients.map do |ingredient|
+        # Add cost to ingredient
+        combo_ingredient = CombinedIngredient.new(ingredient)
 
-  ## SQL that works
-  # SELECT "recipes".* 
-  # FROM "recipes" 
-  # INNER JOIN "recipe_ingredients" 
-  #   ON "recipes"."id" = "recipe_ingredients"."recipe_id" 
-  # WHERE "recipe_ingredients"."ingredient_id" = ?
-  #   AND "recipes"."user_id" = ? 
-  # LIMIT ?  [["ingredient_id", 1], ["user_id", 1], ["LIMIT", 11]]
+        recipe_total += combo_ingredient.total_cost
+      end
+
+      # Add total cost to recipe
+      recipe.total_cost = recipe_total.round(2)
+
+      # Add per serving cost to recipe
+      recipe.per_serving_cost = (recipe_total/recipe.servings).round(2) if recipe.servings
+      
+      binding.pry
+    end
+  end
 
 
   # Writer for custom accepts_nested_attributes_for

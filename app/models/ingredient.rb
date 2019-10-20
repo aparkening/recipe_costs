@@ -1,8 +1,9 @@
 class Ingredient < ApplicationRecord
   require 'csv'
-  
+  attr_accessor :total_cost
+
   # Relationships
-  has_many :recipe_ingredients
+  has_many :recipe_ingredients, dependent: :destroy
   has_many :recipes, through: :recipe_ingredients
   has_many :flags
 
