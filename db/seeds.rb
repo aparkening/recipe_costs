@@ -72,9 +72,7 @@ pizza_dough = peter.recipes.create(name:"Pizza Dough", servings:6)
 
 # Add ingredients to recipes (from recipes.csv)
 # For each recipe, find_by_name, then loop through recipe ingredients to add each ingredient:
-  # recipe.recipe_ingredients.create(ingredient:Ingredient.find_by_name("flour"), ingredient_amount:6.376, ingredient_unit:"oz")
-
-
+  # recipe.recipe_ingredients.create(ingredient:Ingredient.find_by_name("all-purpose flour"), ingredient_amount:6.376, ingredient_unit:"oz")
 
 
 # Add ingredient to recipe
