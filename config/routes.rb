@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   resources :users do
     resources :recipes
     post 'recipes/import'
-    resources :ingredients, controller: 'user_ingredients'
+    resources :ingredients, controller: 'user_ingredient_costs'
   end
   resources :recipes, only: :index
 
