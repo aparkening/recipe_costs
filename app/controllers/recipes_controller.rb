@@ -48,6 +48,7 @@ class RecipesController < ApplicationController
     else
       @user = User.find_by(id: params[:user_id])
       @recipe = Recipe.new(user_id: params[:user_id])
+      10.times{ @recipe.recipe_ingredients.build }
     end
   end
 
@@ -94,21 +95,26 @@ class RecipesController < ApplicationController
 
   # Update record
   def update
+
     if params[:user_id]
-      user = User.find_by(id: params[:user_id])
+      @user = User.find_by(id: params[:user_id])
     
       # Require authorization
-      require_authorization(user)
+      require_authorization(@user)
 
-      recipe = Recipe.find(params[:id])
-      recipe.update(recipe_params)
+      @recipe = Recipe.find(params[:id])
 
-      if recipe.save
+binding.pry
+
+      @recipe.update(recipe_params)
+
+      if @recipe.save
         flash[:success] = "Success! Recipe updated."
-        redirect_to user_recipe_path(user, recipe)
+        redirect_to user_recipe_path(@user, @recipe)
       else
-        flash[:error] = recipe.errors.full_messages
-        redirect_to edit_user_recipe_path(user, recipe)
+        # flash[:error] = recipe.errors.full_messages
+        # redirect_to edit_user_recipe_path(user, recipe)
+        render :edit
       end
     else
       flash[:alert] = "Recipes need a user."
@@ -136,7 +142,7 @@ class RecipesController < ApplicationController
   # end
 
   def recipe_params
-    params.require(:recipe).permit(:name, :servings, :user_id)
+    params.require(:recipe).permit(:name, :servings, :user_id, recipe_ingredients: [:ingredient_id, :ingredient_amount, :ingredient_unit])
   end
 
 end

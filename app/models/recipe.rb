@@ -6,6 +6,8 @@ class Recipe < ApplicationRecord
   has_many :recipe_ingredients
   has_many :ingredients, through: :recipe_ingredients
 
+  # accepts_nested_attributes_for :recipe_ingredients
+
   # Validations
   validates :name, presence: true
   validates :name, uniqueness: { 
@@ -40,21 +42,14 @@ class Recipe < ApplicationRecord
   # LIMIT ?  [["ingredient_id", 1], ["user_id", 1], ["LIMIT", 11]]
 
 
+  # Writer for custom accepts_nested_attributes_for
+  def recipe_ingredients=(ingredients_attributes)
+    # binding.pry
+    ingredient = Ingredient.find(ingredients_attributes[:ingredient_id])
 
-
-  # Writer for custom nested attributes
-  # def ingredients_attributes=(ingredient_attributes)
-  #   ingredient_attributes.values.each do |ing_attribute|
-  #       ingredient = Ingredient.find_or_create_by(ing_attribute)
-  #       # Returns all ingredients from db
-  #       # self.ingredients << ingredient
-
-  #       # Only returns this category (faster)
-  #         if !self.ingredients.include?(ingredient)
-  #           self.post_ingredients.build(:ingredient => ingredient)
-  #         end 
-
-  #   end
-  # end
+    if !self.recipe_ingredients.include?(ingredient)
+      self.recipe_ingredients.build(:ingredient => ingredient, :ingredient_amount => ingredients_attributes[:ingredient_amount], :ingredient_unit => ingredients_attributes[:ingredient_unit])
+    end 
+  end
 
 end
