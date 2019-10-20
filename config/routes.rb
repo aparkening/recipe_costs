@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
+  # Root
   root 'application#index'
-  
+
   # Ingredients
   resources :ingredients
   post 'ingredients/import'
@@ -9,7 +10,7 @@ Rails.application.routes.draw do
   resources :users do
     resources :recipes
     post 'recipes/import'
-    resources :user_ingredients, as: 'ingredients'
+    resources :ingredients, controller: 'user_ingredients'
   end
   resources :recipes, only: :index
 
