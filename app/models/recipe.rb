@@ -26,12 +26,27 @@ class Recipe < ApplicationRecord
   # Scope to return user's recipes by ingredient
   scope :recipes_of_ingredient, -> (ingredient) { joins(:ingredients).where(ingredients: {id: ingredient.id}) }
     # call with Recipe.recipes_of_ingredient(ingredient)
+  
 
-  
-    # def initialize
-    #   @total_cost, @per_serving_cost = 0,0
-    # end
-  
+  # Class import method for CSVs 
+  def self.import(file, user)
+    # Create hash by looping through each row
+    CSV.foreach(file.path, headers: true) do |row|
+      # Specify fields
+      recipe_name = row["recipe_name"]
+      name = row["ingredient"]
+      ingredient_amount = row["ingredient_amount"]
+      ingredient_unit = row["ingredient_unit"]
+
+      # Create record
+      recipe = Recipe.find_by_name(recipe_name)
+      recipe.recipe_ingredients.create(ingredient: Ingredient.find_by_name(name), ingredient_amount: ingredient_amount, ingredient_unit: ingredient_unit)
+
+      recipe.save
+    end
+  end
+
+
     # Calculate recipe cost
     def recipe_cost
       recipe_total = 0

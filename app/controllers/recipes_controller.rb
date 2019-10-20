@@ -136,6 +136,22 @@ class RecipesController < ApplicationController
     end
   end
 
+  # Import CSVs
+  # user_recipes_import_path
+  def import
+    if params[:user_id]
+      user = User.find_by(id: params[:user_id])
+      require_authorization(user)
+
+      Recipe.import(params[:file], user)
+
+      redirect_to user_recipes_path(user), notice: "Success! File imported."
+    else
+      flash[:alert] = "User not found."
+      redirect_to root_path
+    end
+  end
+
   # Delete record
   def destroy
     user = User.find_by(id: params[:user_id])
