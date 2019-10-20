@@ -53,14 +53,21 @@ class RecipesController < ApplicationController
 
   # Create new
   def create
+    # Set user by params
     user = User.find_by(id: params[:user_id])
-    recipe = user.recipes.build(recipe_params)
 
-    if recipe.save
-      redirect_to user_recipe_path(user, recipe)
+    # Ensure current user can create for user
+    require_authorization(user)
+
+    # Create recipe
+    @recipe = user.recipes.build(recipe_params)
+
+    if @recipe.save
+      redirect_to user_recipe_path(user, @recipe)
     else
-      flash[:error] = recipe.errors.full_messages
-      redirect_to new_user_recipe_path(user, recipe)
+      flash[:error] = @recipe.errors.full_messages
+      # redirect_to new_user_recipe_path(user, recipe)
+      render :new
     end
   end
 
