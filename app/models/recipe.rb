@@ -1,5 +1,6 @@
 class Recipe < ApplicationRecord
-  attr_accessor :total_cost, :per_serving_cost
+  # attr_accessor :total_cost, :per_serving_cost
+  # attr_reader :recipe_cost
 
   # Relationships
   belongs_to :user
@@ -25,14 +26,37 @@ class Recipe < ApplicationRecord
   scope :recipes_of_ingredient, -> (ingredient) { joins(:ingredients).where(ingredients: {id: ingredient.id}) }
     # call with Recipe.recipes_of_ingredient(ingredient)
 
+  
+    # def initialize
+    #   @total_cost, @per_serving_cost = 0,0
+    # end
+  
+    # Calculate recipe cost
+    def recipe_cost
+      recipe_total = 0
+      self.recipe_ingredients.map do |ingredient|
+        # Add cost to ingredient
+        combo_ingredient = CombinedIngredient.new(ingredient)
+  
+        recipe_total += combo_ingredient.total_cost
+      end
+  
+      # Add total cost to recipe
+      total_cost = recipe_total.round(2)
+  
+      # # Add per serving cost to recipe
+      # @per_serving_cost = (recipe_total/self.servings).round(2) if self.servings
+        
+      # binding.pry
+    end
 
   # Determine recipe cost
   def self.recipes_costs(user)
     recipes = Recipe.users_recipes(user)
     recipe_total = 0
 
-    recipes.map do |recipe|
-      recipe.recipe_ingredients.map do |ingredient|
+    recipes.each do |recipe|
+      recipe.recipe_ingredients.each do |ingredient|
         # Add cost to ingredient
         combo_ingredient = CombinedIngredient.new(ingredient)
 
@@ -40,12 +64,12 @@ class Recipe < ApplicationRecord
       end
 
       # Add total cost to recipe
-      recipe.total_cost = recipe_total.round(2)
+      recipe.update(total_cost: recipe_total.round(2))
+      recipe.save
 
-      # Add per serving cost to recipe
-      recipe.per_serving_cost = (recipe_total/recipe.servings).round(2) if recipe.servings
-      
-      binding.pry
+      # # Add per serving cost to recipe
+      # recipe.per_serving_cost = (recipe_total/self.servings).round(2) if self.servings
+
     end
   end
 
