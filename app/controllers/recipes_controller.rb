@@ -48,7 +48,8 @@ class RecipesController < ApplicationController
     else
       @user = User.find_by(id: params[:user_id])
       @recipe = Recipe.new(user_id: params[:user_id])
-      10.times{ @recipe.recipe_ingredients.build }
+      
+      10.times{ @recipe.recipe_ingredients.build() }
     end
   end
 
@@ -85,6 +86,9 @@ class RecipesController < ApplicationController
         redirect_to root_path
       else
         @recipe = @user.recipes.find_by(id: params[:id])
+
+        2.times{ @recipe.recipe_ingredients.build() }
+
         redirect_to user_recipes_path(@user), alert: "Recipe not found." if @recipe.nil?
       end
     else
@@ -142,7 +146,7 @@ binding.pry
   # end
 
   def recipe_params
-    params.require(:recipe).permit(:name, :servings, :user_id, recipe_ingredients: [:ingredient_id, :ingredient_amount, :ingredient_unit])
+    params.require(:recipe).permit(:name, :servings, :user_id, recipe_ingredients_attributes: [:user_id, :ingredient_id, :ingredient_amount, :ingredient_unit])
   end
 
 end

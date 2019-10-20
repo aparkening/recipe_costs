@@ -6,7 +6,7 @@ class Recipe < ApplicationRecord
   has_many :recipe_ingredients
   has_many :ingredients, through: :recipe_ingredients
 
-  # accepts_nested_attributes_for :recipe_ingredients
+  accepts_nested_attributes_for :recipe_ingredients, reject_if: proc { |attributes| attributes['ingredient_id'].blank? }
 
   # Validations
   validates :name, presence: true
@@ -44,7 +44,7 @@ class Recipe < ApplicationRecord
 
   # Writer for custom accepts_nested_attributes_for
   def recipe_ingredients=(ingredients_attributes)
-    # binding.pry
+
     ingredient = Ingredient.find(ingredients_attributes[:ingredient_id])
 
     if !self.recipe_ingredients.include?(ingredient)

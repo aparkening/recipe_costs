@@ -11,7 +11,7 @@
 
   <div class="form-group">
     <h3>Ingredients</h3>
-    <%= f.fields_for :recipe_ingredients do |ing| %>
+    <%= f.fields_for :recipe_ingredients do |ing| %>    
       <%= ing.collection_select :ingredient_id, Ingredient.all, :id, :name, {include_blank: true} %>
       
       <%= ing.label :ingredient_amount %>
