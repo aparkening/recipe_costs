@@ -13,7 +13,7 @@
     <h3>Ingredients</h3>
     <%= f.fields_for :recipe_ingredients do |ing| %>    
       <%= ing.collection_select :ingredient_id, Ingredient.all, :id, :name, {include_blank: true} %>
-      
+
       <%= ing.label :ingredient_amount, 'Amount' %>
       <%= ing.text_field :ingredient_amount %>
       
@@ -22,7 +22,6 @@
 
       <%= ing.check_box :_destroy %> <%= f.label :_destroy, value: "Remove"%>
     <% end %>
-
   </div>
 
   <div class="form-group">
