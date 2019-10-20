@@ -7,15 +7,9 @@ class RecipesController < ApplicationController
       # @recipes = Recipe.all
       @user = User.find_by(id: params[:user_id])
       @recipes = @user.recipes
-    elsif params[:user_id]
-      @user = User.find_by(id: params[:user_id])
-      if @user.nil?
-        flash[:alert] = "User not found."
-        redirect_to root_path
-      else
-        @recipes = @user.recipes
-        # @recipes = Recipe.recipes_costs(@user)
-      end
+    elsif params[:user_id] && @user = User.find_by(id: params[:user_id])
+      @recipes = @user.recipes
+      # @recipes = Recipe.recipes_costs(@user)
     else
       flash[:alert] = "Recipes need a user."
       redirect_to root_path
