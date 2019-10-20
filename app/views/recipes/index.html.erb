@@ -7,6 +7,8 @@
 
 <ul>
 <% @recipes.each do |recipe| %>
+  <%= binding.pry %>
+  
   <li><%= link_to recipe.name, user_recipe_path(@user, recipe) %> - <small><%= link_to 'Edit', edit_user_recipe_path(@user, recipe), class:'text-muted' %> | <%= link_to "Delete", user_recipe_path(recipe.user, recipe), method: :delete, class:'text-muted', data: { confirm: "Are you sure?" } %></small></li>
 <% end %>
 </ul>
