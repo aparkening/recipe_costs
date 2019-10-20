@@ -6,7 +6,7 @@ class Recipe < ApplicationRecord
   has_many :recipe_ingredients
   has_many :ingredients, through: :recipe_ingredients
 
-  accepts_nested_attributes_for :recipe_ingredients, reject_if: proc { |attributes| attributes['ingredient_id'].blank? }
+  accepts_nested_attributes_for :recipe_ingredients, reject_if: proc { |attributes| attributes['ingredient_id'].blank? }, allow_destroy: true
 
   # Validations
   validates :name, presence: true
@@ -43,13 +43,13 @@ class Recipe < ApplicationRecord
 
 
   # Writer for custom accepts_nested_attributes_for
-  def recipe_ingredients=(ingredients_attributes)
+  # def recipe_ingredients=(ingredients_attributes)
 
-    ingredient = Ingredient.find(ingredients_attributes[:ingredient_id])
+  #   ingredient = Ingredient.find(ingredients_attributes[:ingredient_id])
 
-    if !self.recipe_ingredients.include?(ingredient)
-      self.recipe_ingredients.build(:ingredient => ingredient, :ingredient_amount => ingredients_attributes[:ingredient_amount], :ingredient_unit => ingredients_attributes[:ingredient_unit])
-    end 
-  end
+  #   if !self.recipe_ingredients.include?(ingredient)
+  #     self.recipe_ingredients.build(:ingredient => ingredient, :ingredient_amount => ingredients_attributes[:ingredient_amount], :ingredient_unit => ingredients_attributes[:ingredient_unit])
+  #   end 
+  # end
 
 end
