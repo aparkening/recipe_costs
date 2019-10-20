@@ -9,12 +9,12 @@
     <small id="costHelp" class="form-text text-muted">No need to include $</small>
   </div>
   <div class="form-group">
-    <%= f.label :cost_size, 'Amount' %>
-    <%= f.text_field :cost_size, class:'form-control', placeholder: 'example: 5',required:true %>
+    <%= f.label :cost_unit, 'Unit' %>
+    <%= f.text_field :cost_unit, class:'form-control', placeholder:'example: lb', required:true %>
   </div>
   <div class="form-group">
-    <%= f.label :cost_unit, 'Unit' %>
-    <%= f.text_field :cost_unit, class:'form-control', placeholder:'example: lbs', required:true %>
+    <%= f.label :cost_size, 'Amount' %>
+    <%= f.text_field :cost_size, class:'form-control', placeholder: 'example: 5',required:true %>
   </div>
   <div class="form-group">
     <%= f.submit class:'btn btn-lg btn-primary btn-block' %>
