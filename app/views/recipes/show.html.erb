@@ -1,7 +1,33 @@
-<h1><%= @recipe.name %></h1>
-<div class="helper_links"><%= link_to 'Edit recipe name/servings', edit_user_recipe_path(@user) %> | <%= link_to "Delete", user_recipe_path(@user, @recipe), method: :delete, data: { confirm: "Are you sure?" } %></div>
-
-Ingredients go here
+<h1><%= @recipe.name %> (<small class="helper_links"><%= link_to 'Edit ', edit_user_recipe_path(@user) %> | <%= link_to "Delete", user_recipe_path(@user, @recipe), method: :delete, data: { confirm: "Are you sure?" } %></small>)</h1>
 
 
-<%= link_to "All your recipes", user_recipes_path(@user) %>
+<h2>
+  <% if @recipe.servings %>
+   Serves <%= @recipe.servings %> |
+  <% end %>
+  Total Cost: <%= @recipe_total %>
+</h2>
+
+<h2>Ingredients</h2>
+<table class="table table-striped">
+  <thead class="thead-dark">
+    <tr>
+      <th>Total Cost</th>
+      <th>Name</th>
+      <th>Amount</th>
+      <th>Amount Unit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @recipe.recipe_ingredients.each_with_index do |recipe_ingredient, index| %>
+      <tr>
+        <td>$ <%= @recipe_ingredient_costs[index] %></td>
+        <th scope="row"><%= recipe_ingredient.ingredient.name %></th>
+        <td><%= recipe_ingredient.ingredient_amount %></td>
+        <td><%= recipe_ingredient.ingredient_unit %></td>
+      </tr>  
+    <% end %>
+  </tbody>  
+</table>
+
+<%= link_to "< All your recipes", user_recipes_path(@user) %>
