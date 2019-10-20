@@ -13,8 +13,8 @@ class RecipesController < ApplicationController
         flash[:alert] = "User not found."
         redirect_to root_path
       else
-        # @recipes = @user.recipes
-        @recipes = Recipe.recipes_costs(@user)
+        @recipes = @user.recipes
+        # @recipes = Recipe.recipes_costs(@user)
       end
     else
       flash[:alert] = "Recipes need a user."
@@ -33,6 +33,18 @@ class RecipesController < ApplicationController
       require_authorization(@user)
 
       @recipe = @user.recipes.find_by(id: params[:id])
+      # @recipe_ingredient_costs = {}
+      @recipe_total = 0
+
+      @recipe_ingredient_costs = @recipe.recipe_ingredients.map do |ingredient|
+        combo_ingredient = CombinedIngredient.new(ingredient)
+        total_cost = combo_ingredient.total_cost
+      
+        @recipe_total += combo_ingredient.total_cost
+
+        total_cost
+      end 
+      # @recipe_cost = Recipe.recipes_costs(@user)
     end
 
     if @recipe.nil?
