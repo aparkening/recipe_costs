@@ -15,9 +15,11 @@ class Recipe < ApplicationRecord
 
   # Scope to return user's recipes
   scope :users_recipes, -> (user) {where(user_id: user.id)}
+    # call with Recipe.users_recipes(user)
   
   # Scope to return user's recipes by ingredient
   scope :recipes_of_ingredient, -> (ingredient) { joins(:ingredients).where(ingredients: {id: ingredient.id}) }
+    # call with Recipe.recipes_of_ingredient(ingredient)
 
 
   # This works:
