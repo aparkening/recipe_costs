@@ -1,15 +1,46 @@
 class IngredientsController < ApplicationController
-  before_action :require_admin
-  before_action :set_ing, only: [:edit, :update, :destroy]
+  before_action :require_admin, only: [:import]
+  # before_action :set_ing, only: [:edit, :update, :destroy]
 
   # All records
   def index
-    @ingredients = Ingredient.all.order(name: :asc)
+    # If admin user, show all ingredients
+    if is_admin?
+      @ingredients = Ingredient.all.order(name: :asc)
+
+    # If other user, show own ingredient lists
+    elsif params[:user_id]
+      @user = User.find_by(id: params[:user_id])
+      if @user.nil?
+        flash[:alert] = "User not found."
+        redirect_to root_path
+      else
+        @ingredients = @user.user_ingredients
+        # @recipes = Recipe.recipes_costs(@user)
+      end
+    else
+      flash[:alert] = "Recipes need a user."
+      redirect_to root_path
+    end
+
+
+
+    def set_ing
+
+    end
+
+
+
+
   end
 
   # Display new form
   def new
+    
+    
     @ingredient = Ingredient.new
+
+
   end
 
   # Create record
@@ -61,10 +92,6 @@ class IngredientsController < ApplicationController
 
 
   private
-
-  def set_ing
-    @ingredient = Ingredient.find(params[:id])
-  end
 
   def ing_params
     params.require(:ingredient).permit(:name, :cost, :cost_size, :cost_unit)
