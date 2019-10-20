@@ -1,4 +1,5 @@
 class Recipe < ApplicationRecord
+  require 'csv'
   # attr_accessor :total_cost, :per_serving_cost
   # attr_reader :recipe_cost
 
