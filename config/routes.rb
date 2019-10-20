@@ -3,9 +3,10 @@ Rails.application.routes.draw do
   
   resources :users do
     resources :recipes
+    post 'recipes/import'
   end
   resources :recipes, only: :index
-
+ 
   # Session
   get '/login' => 'sessions#new'
   post '/login' => 'sessions#create'
