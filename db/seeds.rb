@@ -2,19 +2,6 @@
 # The data can then be loaded with the rails db:seed command (or created alongside the database with db:setup).
 
 
-### Console Testing
-# user1 = User.last
-
-# user1_recipe = user1.recipes.last
-# ing1 = Ingredient.last
-
-# recipe1_ing1 = user1_recipe.recipe_ingredients.last
-
-# user1_ing1 = user1.user_ingredient_costs.last
-
-# combo_ing1 = CombinedIngredient.new(recipe1_ing1)
-
-
 ### Build seeds
 
 # Users
@@ -67,13 +54,18 @@ french_bread = peter.recipes.create(name:"French Bread", servings:6)
 pizza_dough = peter.recipes.create(name:"Pizza Dough", servings:6)
 
 
-# Ingredients (from ingredients.csv)
+# Ingredients
+# -> Upload full set from app/assets/ingredients.csv
 
 
-# Add ingredients to recipes (from recipes.csv)
+# Add ingredients to recipes
+# -> Upload full set from recipe CSVs in app/assets
+
+
+
+### Testing
 # For each recipe, find_by_name, then loop through recipe ingredients to add each ingredient:
   # recipe.recipe_ingredients.create(ingredient:Ingredient.find_by_name("all-purpose flour"), ingredient_amount:6.376, ingredient_unit:"oz")
-
 
 # Add ingredient to recipe
 # r1_ing1 = user1_r1.recipe_ingredients.create(ingredient:ing1, ingredient_amount:6.376, ingredient_unit:"oz")
@@ -89,10 +81,10 @@ pizza_dough = peter.recipes.create(name:"Pizza Dough", servings:6)
 # flag1 = paul.flags.create(ingredient: flour, note: "Flour is spelled wrong.")
 
 # Add category
-breads = paul.categories.create(name:"Breads") 
+# breads = paul.categories.create(name:"Breads") 
 
 # Add recipe to category
-breads.recipes << white_bread
+# breads.recipes << white_bread
 
 # Add weight volume conversion to weight_volume_conversion table
 # convert1 = WeightVolumeConversion.create(ingredient:ing1, weight_size: 4.25, weight_unit: "oz", vol_size: 1, vol_unit: "c")
