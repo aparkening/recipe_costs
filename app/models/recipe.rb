@@ -25,10 +25,8 @@ class Recipe < ApplicationRecord
   # Scope to return user's recipes by ingredient
   scope :recipes_of_ingredient, -> (ingredient) { joins(:ingredients).where(ingredients: {id: ingredient}) }
 
-  # Still working on this:
-  # scope :recipes_of_ingredient, -> (ingredient_id) { joins(:ingredients).where(ingredients: ingredient_id) }
-    # call with Recipe.recipes_of_ingredient(ingredient)
-  
+  # Scope to return all user's ingredients used in recipes
+  scope :all_ingredients, -> { joins(:ingredients).select("ingredients.*") }
 
 
   # Class import method for CSVs 
