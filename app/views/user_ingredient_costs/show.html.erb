@@ -1,0 +1,27 @@
+<h1>Custom Ingredient Cost</h1>
+
+<table class="table table-striped">
+  <thead class="thead-dark">
+    <tr>
+      <th>Links</th>
+      <th>Name</th>
+      <th>Cost</th>
+      <th>Cost Size</th>
+      <th>Cost Unit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>
+        <small>
+	        <%= link_to 'Edit', edit_user_ingredient_path(@user, @user_ingredient_cost), class:'text-muted' %> | <%= link_to "Delete", user_ingredient_path(@user, @user_ingredient_cost), method: :delete, class:'text-muted', data: { confirm: "Are you sure?" } %>
+        </small>
+      </th>
+      <th scope="row"><%= @user_ingredient_cost.ingredient.name %></td>
+      <td>$ <%= @user_ingredient_cost.cost %></td>
+      <td><%= @user_ingredient_cost.cost_size %></td>
+      <td><%= @user_ingredient_cost.cost_unit %></td>
+    </tr>  
+    <% end %>
+  </tbody>  
+</table>

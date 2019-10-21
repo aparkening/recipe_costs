@@ -1,5 +1,26 @@
 <h1>Add Custom Cost</h1>
 
-<%= render "application/errors", object: @user_ingredient %>
+<%= render "application/errors", object: @user_ingredient_cost %>
 
-<%= render "form", user_ingredient: @user_ingredient, user: @user %>
+<%= form_for @user_ingredient_cost, url: user_ingredients_path(@user) do |f| %>
+
+  <div class="form-group">
+    <%= f.collection_select :id, Ingredient.all, :id, :name %>
+  </div>
+  <div class="form-group">
+    <%= f.label :cost %>
+    <%= f.text_field :cost, class:'form-control', placeholder: 'example: 12', required:true %>
+    <small id="costHelp" class="form-text text-muted">No need to include $</small>
+  </div>
+  <div class="form-group">
+    <%= f.label :cost_unit, 'Unit' %>
+    <%= f.text_field :cost_unit, class:'form-control', placeholder:'example: lb', required:true %>
+  </div>
+  <div class="form-group">
+    <%= f.label :cost_size, 'Size' %>
+    <%= f.text_field :cost_size, class:'form-control', placeholder: 'example: 5',required:true %>
+  </div>
+  <div class="form-group">
+    <%= f.submit class:'btn btn-lg btn-primary btn-block' %>
+  </div>
+<% end %>

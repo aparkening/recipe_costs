@@ -1,4 +1,5 @@
-<%= form_for user_ingredient, url: [user, user_ingredient] do |f| %>
+<%= form_for @user_ingredient_cost, url: user_ingredient_path(@user) do |f| %>
+
 
   <div class="form-group">
     <%= f.collection_select :id, Ingredient.all, :id, :name %>
@@ -13,7 +14,7 @@
     <%= f.text_field :cost_unit, class:'form-control', placeholder:'example: lb', required:true %>
   </div>
   <div class="form-group">
-    <%= f.label :cost_size, 'Amount' %>
+    <%= f.label :cost_size, 'Size' %>
     <%= f.text_field :cost_size, class:'form-control', placeholder: 'example: 5',required:true %>
   </div>
   <div class="form-group">
