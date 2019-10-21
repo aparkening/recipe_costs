@@ -19,9 +19,7 @@ class RecipesController < ApplicationController
   # Display user's recipes by ingredient
   def by_ingredient
     redirect_non_users
-    
-    binding.pry
-    
+        
     @user = User.find_by(id: params[:user_id])
     @ingredient = Ingredient.find(params[:id])
     @recipes = @user.recipes.recipes_of_ingredient(params[:id])
