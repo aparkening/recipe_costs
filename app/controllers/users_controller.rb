@@ -15,8 +15,8 @@ class UsersController < ApplicationController
 
   # Display user page
   def show
+    redirect_non_users
     @user = User.find(params[:id])
-    # Redirect if not user or admin  
     require_authorization(@user)
   end
 
@@ -24,15 +24,11 @@ class UsersController < ApplicationController
   def new
     @user = User.new
   end
-
-  # Display edit form
-  def edit
-    @user = User.find(params[:id])
-    require_authorization(@user)
-  end
   
   # Create user
   def create
+
+    # Set correct admin data if box checked
     params[:user][:admin] = "true" if params[:user][:admin] && params[:user][:admin] == "1"
 
     @user = User.new(user_params)
@@ -50,30 +46,40 @@ class UsersController < ApplicationController
       # redirect_to new_user_path, error: "Credentials don't work. Please ensure your passwords match."
     end
   end
- 
-  # Edit user
-  def update
-    params[:user][:admin] = "true" if params[:user][:admin] && params[:user][:admin] == "1"
 
+  # Display edit form
+  def edit
+    redirect_non_users
     @user = User.find(params[:id])
 
-    # Ensure edits are made by owner or admin user
-    if user_authorized?(@user)
-      @user.update(user_params)
-      if @user.save
-        # Set session if current user isn't an admin
-        if @user == current_user
-          redirect_to @user, notice: "Success! You're updated."
-        else 
-          redirect_to users_path, notice: "#{@user.name} successfully updated."
-        end
-      else
-        flash[:error] = @user.errors.full_messages
-        # flash[:error] = "Credentials don't work. Please ensure your passwords match."
-        render :edit
+    # Require authorization
+    require_authorization(@user)
+  end
+ 
+  # Update user
+  def update
+    redirect_non_users
+    @user = User.find(params[:id])
+
+    # Require authorization
+    require_authorization(@user)
+
+    # Set correct admin data if box checked
+    params[:user][:admin] = "true" if params[:user][:admin] && params[:user][:admin] == "1"
+
+    @user.update(user_params)
+
+    if @user.save
+      # Set session if current user isn't an admin
+      if @user == current_user
+        redirect_to @user, notice: "Success! You're updated."
+      else 
+        redirect_to users_path, notice: "#{@user.name} successfully updated."
       end
     else
-      redirect_to root_path, error: "You're not authorized to change this resource."
+      # flash[:error] = @user.errors.full_messages
+      # flash[:error] = "Credentials don't work. Please ensure your passwords match."
+      render :edit
     end
   end
 
@@ -94,7 +100,7 @@ class UsersController < ApplicationController
   private
  
   def user_params
-    params.require(:user).permit(:name, :password, :password_confirmation, :organization, :admin)
+    params.require(:user).permit(:name, :password, :password_confirmation, :organization, :email, :admin)
   end
   
 end
