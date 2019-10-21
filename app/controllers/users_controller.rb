@@ -27,7 +27,6 @@ class UsersController < ApplicationController
   
   # Create user
   def create
-
     # Set correct admin data if box checked
     params[:user][:admin] = "true" if params[:user][:admin] && params[:user][:admin] == "1"
 
@@ -41,9 +40,9 @@ class UsersController < ApplicationController
         redirect_to user_path(@user)
       end
     else
-      flash[:error] = @user.errors.full_messages
-      redirect_to new_user_path
-      # redirect_to new_user_path, error: "Credentials don't work. Please ensure your passwords match."
+      # flash[:error] = @user.errors.full_messages
+      # redirect_to new_user_path
+      render :new
     end
   end
 
