@@ -1,6 +1,6 @@
 class IngredientsController < ApplicationController
   before_action :require_admin, only: [:import]
-  before_action :set_ing, only: [:edit, :update, :destroy]
+  before_action :set_user
 
   # All records
   def index
@@ -9,11 +9,7 @@ class IngredientsController < ApplicationController
 
   # Display new form
   def new
-    
-    
     @ingredient = Ingredient.new
-
-
   end
 
   # Create record
@@ -66,8 +62,8 @@ class IngredientsController < ApplicationController
 
   private
 
-  def set_ing
-    @ingredient = Ingredient.find(params[:id])
+  def set_user
+    @user = current_user
   end
 
   def ing_params
