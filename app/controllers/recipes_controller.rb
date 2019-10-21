@@ -16,6 +16,20 @@ class RecipesController < ApplicationController
     end
   end
 
+  # Display user's recipes by ingredient
+  def by_ingredient
+    redirect_non_users
+    
+    binding.pry
+    
+    @user = User.find_by(id: params[:user_id])
+    
+    @recipes = @user.recipes.recipes_of_ingredient(ing)
+
+    render 'index'
+  end
+
+
   # Display record
   def show
     # if is_admin?
