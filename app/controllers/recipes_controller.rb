@@ -27,8 +27,23 @@ class RecipesController < ApplicationController
     redirect_non_users
         
     @user = User.find_by(id: params[:user_id])
-    @ingredient = Ingredient.find(params[:id])
-    @recipes = @user.recipes.recipes_of_ingredient(params[:id])
+  
+    # If ingredient exists, find recipes that use it
+    if Ingredient.exists?(params[:id])
+      @ingredient = Ingredient.find(params[:id])
+      if is_admin?
+        # Show all recipes from ingredient for admins
+        @recipes = Recipe.recipes_of_ingredient(params[:id])
+      else
+        # Only show user's recipes
+        @recipes = @user.recipes.recipes_of_ingredient(params[:id])
+      end
+    else
+      flash[:alert] = "That ingredient wasn't found."
+
+      # Else show all users' recipes
+      @recipes = @user.recipes
+    end
 
     render 'index'
   end
