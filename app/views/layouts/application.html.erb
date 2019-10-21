@@ -13,35 +13,7 @@
   </head>
 
   <body>
-    <nav class="navbar navbar-expand navbar-light bg-light fixed-top border flex-column flex-md-row bd-navbar">
-      <a class="navbar-brand" href="<%= root_url %>" aria-label="Home" title="Home"><img src="<%= root_url %>open-iconic/svg/spreadsheet.svg" alt="Home"> Recipe Costs</a>
-      
-      <div class="navbar-nav-scroll">
-        <ul class="navbar-nav mr-auto">
-          <% if current_user %>
-            <li class="nav-item">
-              <a class="nav-link" href="<%= user_path(current_user) %>">Dashboard</a>
-            </li>          
-            <li class="nav-item">
-              <%= link_to 'Recipes', user_recipes_path(@user), class: "nav-link" %>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="<%= user_ingredients_path(current_user) %>">Ingredient Costs</a>
-            </li>       
-            <li class="nav-item">
-              <%= link_to "Log Out", logout_path, class: "nav-link" %>
-            </li>
-
-            <% else %>
-              <li class="nav-item">
-              <a class="nav-link" href="<%= new_user_path %>"/>Sign Up</a>
-              <li class="nav-item">
-              <a class="nav-link" href="<%= login_path %>"/>Log In</a>
-            </li>
-          <% end %>
-        </ul>
-      </div>
-    </nav>
+    <%= render "application/nav" %>
 
     <main role="main" class="container">
 
