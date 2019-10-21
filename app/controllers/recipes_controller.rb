@@ -4,9 +4,9 @@ class RecipesController < ApplicationController
   # Display all user's recipes
   def index
     if is_admin?
-      # @recipes = Recipe.all
+      @recipes = Recipe.all
       @user = User.find_by(id: params[:user_id])
-      @recipes = @user.recipes
+      # @recipes = @user.recipes
     else
       redirect_non_users
       
@@ -18,17 +18,23 @@ class RecipesController < ApplicationController
 
   # Display record
   def show
+    # if is_admin?
+    #   @recipe = Recipe.find(params[:id])
+    #   @user = @recipe.user
+    # else
+    redirect_non_users
+    @user = User.find_by(id: params[:user_id])
+    # Require authorization
+    require_authorization(@user)
+
+    # Search all recipes for admin; subset for user
     if is_admin?
-      @recipe = Recipe.find(params[:id])
-      @user = @recipe.user
-    else
-      redirect_non_users
-      @user = User.find_by(id: params[:user_id])
-      # Require authorization
-      require_authorization(@user)
-
+      @recipe = Recipe.find_by(id: params[:id])
+    else 
       @recipe = @user.recipes.find_by(id: params[:id])
+    end
 
+    if @recipe
       # ** Mark: Make more MVC **
       # Manually calculate costs
       @recipe_total = 0
@@ -46,9 +52,7 @@ class RecipesController < ApplicationController
       end 
       @recipe_total = @recipe_total.round(2)
       @cost_per_serving = (@recipe_total/@recipe.servings).round(2) if @recipe.servings
-    end
-
-    if @recipe.nil?
+    else
       flash[:alert] = "Recipe not found."
       redirect_to user_recipes_path(@user)
     end
@@ -93,8 +97,12 @@ class RecipesController < ApplicationController
     # Require authorization
     require_authorization(@user)
 
-    # Find recipe
-    @recipe = @user.recipes.find_by(id: params[:id])
+    # Search all recipes for admin; subset for user
+    if is_admin?
+      @recipe = Recipe.find_by(id: params[:id])
+    else 
+      @recipe = @user.recipes.find_by(id: params[:id])
+    end
 
     # Add two blank ingredients to add more on edit screen
     2.times{ @recipe.recipe_ingredients.build() }
