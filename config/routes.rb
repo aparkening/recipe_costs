@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   # Users, with recipes and user_ingredients
   resources :users do
     resources :recipes
+    get 'recipes/ingredients/:id' => 'recipes#by_ingredient', as: "recipes_by_ingredient"
     post 'recipes/import'
     resources :ingredients, controller: 'user_ingredient_costs'
   end
