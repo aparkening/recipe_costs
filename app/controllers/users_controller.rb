@@ -19,8 +19,8 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     require_authorization(@user)
 
-    # Get all ingredients for ingredient selector
-    @ingredients = Ingredient.all.order(name: :asc)
+    # Get all ingredients used by user
+    @ingredients = @user.recipes.all_ingredients
   end
 
   # Display signup form
