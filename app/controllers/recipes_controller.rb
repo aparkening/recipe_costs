@@ -61,6 +61,7 @@ class RecipesController < ApplicationController
 
     @recipe = Recipe.new(user_id: params[:user_id])
       
+    # Display 10 ingredient fields
     10.times{ @recipe.recipe_ingredients.build() }
   end
 
@@ -70,13 +71,13 @@ class RecipesController < ApplicationController
     @user = User.find_by(id: params[:user_id])
 
     # Ensure current user can create for user
-    require_authorization(user)
+    require_authorization(@user)
 
     # Create recipe
-    @recipe = user.recipes.build(recipe_params)
+    @recipe = @user.recipes.build(recipe_params)
 
     if @recipe.save
-      redirect_to user_recipe_path(user, @recipe)
+      redirect_to user_recipe_path(@user, @recipe)
     else
       # flash[:error] = @recipe.errors.full_messages
       # redirect_to new_user_recipe_path(user, recipe)
