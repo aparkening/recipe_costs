@@ -1,7 +1,5 @@
 class Recipe < ApplicationRecord
   require 'csv'
-  # attr_accessor :total_cost, :per_serving_cost
-  # attr_reader :recipe_cost
 
   # Relationships
   belongs_to :user
@@ -10,6 +8,7 @@ class Recipe < ApplicationRecord
   has_many :recipe_ingredients, dependent: :destroy
   has_many :ingredients, through: :recipe_ingredients
 
+  # Accept recipe_ingredients nested attributes
   accepts_nested_attributes_for :recipe_ingredients, reject_if: proc { |attributes| attributes['ingredient_id'].blank? || attributes['ingredient_amount'].blank? || attributes['ingredient_unit'].blank?}, allow_destroy: true
 
   # Validations
@@ -24,9 +23,13 @@ class Recipe < ApplicationRecord
     # call with Recipe.users_recipes(user)
   
   # Scope to return user's recipes by ingredient
-  scope :recipes_of_ingredient, -> (ingredient) { joins(:ingredients).where(ingredients: {id: ingredient.id}) }
+  scope :recipes_of_ingredient, -> (ingredient) { joins(:ingredients).where(ingredients: {id: ingredient}) }
+
+  # Still working on this:
+  # scope :recipes_of_ingredient, -> (ingredient_id) { joins(:ingredients).where(ingredients: ingredient_id) }
     # call with Recipe.recipes_of_ingredient(ingredient)
   
+
 
   # Class import method for CSVs 
   def self.import(file, user)
