@@ -5,9 +5,19 @@
           <li class="nav-item">
             <%= link_to '+ Add Recipe', new_user_recipe_path(@user) %>
           </li>
-          <li class="nav-item">
-            <%= link_to '+ Add Ingredient Cost', new_user_ingredient_path(@user) %>
-          </li>
+
+          <% if is_admin? %>
+            <li class="nav-item">
+              <%= link_to '= All Ingredients', ingredients_path %>
+            </li>
+            <li class="nav-item">
+              <%= link_to '+ Add Ingredient', new_ingredient_path %>
+            </li>
+          <% else %>
+            <li class="nav-item">
+              <%= link_to '+ Add Ingredient Cost', new_user_ingredient_path(@user) %>
+            </li>
+          <% end %>
           <li class="nav-item">
             <%= link_to '- Edit Account', edit_user_path(@user) %>
           </li>
@@ -16,7 +26,7 @@
     </nav>
 
     <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
-      <h1><%= @user.name %> Dashboard</h1>
+      <h1><%= @user.name %> Dashboard <% if is_admin? %>(Admin)<% end%></h1>
 
       <p>More to come!</p>
     </main>
