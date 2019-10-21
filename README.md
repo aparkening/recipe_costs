@@ -37,15 +37,15 @@ Add your own data to get started. Or take the steps below to interact with a ful
 
 2. While the seed file contains some ingredients to get started, you'll get more data by uploading the included ingredient CSV file.
 
-a) Log in as the admin user, David Baker (with password `testing123`).
-b) Navigate to /ingredients and upload the `ingredients.csv` file from app/assets.
-c) Look at all that new ingredient data!
+* Log in as the admin user, David Baker (with password `testing123`).
+* Navigate to /ingredients and upload the `ingredients.csv` file from app/assets.
+* Look at all that new ingredient data!
 
 3. Log in as any of the seed users from /db/seeds.rb to add bulk ingredients to recipes via more CSV files. 
 
-a) Log in with any default user, such as Paul Hollywood, Mary Berry, and Peter Reinhart (all with passwords `testing123`).
-b) Navigate to /recipes and notice that there are recipes, but no ingredients or costs. Upload any CSV matching the user's name from app/assets.
-c) Check out each fully-populated recipe!
+* Log in with any default user, such as Paul Hollywood, Mary Berry, and Peter Reinhart (all with passwords `testing123`).
+* Navigate to /recipes and notice that there are recipes, but no ingredients or costs. Upload any CSV matching the user's name from app/assets.
+* Check out each fully-populated recipe!
 
 ## Development
 
