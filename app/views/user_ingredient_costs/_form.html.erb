@@ -1,6 +1,4 @@
 <%= form_for @user_ingredient_cost, url: user_ingredient_path(@user) do |f| %>
-
-
   <div class="form-group">
     <%= f.collection_select :id, Ingredient.all, :id, :name %>
   </div>
