@@ -5,6 +5,11 @@
   <div class="helper_links"><%= link_to "Add new recipe", new_user_recipe_path(@user) %></div>
 <% end %>
 
+
+<% if @ingredient %>
+  <h2>Recipes that contain <%= @ingredient.name %></h2>
+<% end  %>
+
 <table class="table table-striped">
   <thead class="thead-dark">
     <tr>
