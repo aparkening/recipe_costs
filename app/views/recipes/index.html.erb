@@ -1,14 +1,25 @@
 <% if is_admin? %>
-  <h1>Recipes</h1>
+  <h1>All Recipes</h1>
 <% else %>
   <h1><%= @user.name %> Recipes</h1>
   <div class="helper_links"><%= link_to "Add new recipe", new_user_recipe_path(@user) %></div>
 <% end %>
 
-<ul>
-<% @recipes.each do |recipe| %>  
-  <li><%= link_to recipe.name, user_recipe_path(@user, recipe) %> - <small><%= link_to 'Edit', edit_user_recipe_path(@user, recipe), class:'text-muted' %> | <%= link_to "Delete", user_recipe_path(recipe.user, recipe), method: :delete, class:'text-muted', data: { confirm: "Are you sure?" } %></small></li>
-<% end %>
-</ul>
+<table class="table table-striped">
+  <thead class="thead-dark">
+    <tr>
+      <th>Name</th>
+      <th>Links</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @recipes.each do |recipe| %>  
+      <tr>
+        <th scope="row"><%= link_to recipe.name, user_recipe_path(@user, recipe) %></th>
+        <td><small><%= link_to 'Edit', edit_user_recipe_path(@user, recipe), class:'text-muted' %> | <%= link_to "Delete", user_recipe_path(recipe.user, recipe), method: :delete, class:'text-muted', data: { confirm: "Are you sure?" } %></small></td>
+      </tr>  
+    <% end %>
+  </tbody>  
+</table>
 
 <%= render "ingredients/import", path: user_recipes_import_path %>
