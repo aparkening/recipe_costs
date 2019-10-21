@@ -28,20 +28,24 @@ class IngredientsController < ApplicationController
 
   # Display edit form
   def edit
+    @ingredient = Ingredient.find_by(id: params[:id])
+
+    redirect_to ingredients_path, alert: "Ingredient not found." if @ingredient.nil?
   end
 
   # Update record
   def update
     # Make name lowercase
     params[:ingredient][:name] = params[:ingredient][:name].downcase
+
+    @ingredient = Ingredient.find_by(id: params[:id])
     @ingredient.update(ing_params)
 
     if @ingredient.save
       flash[:success] = "Success! #{@ingredient.name.capitalize} updated."
       redirect_to ingredients_path
     else
-      flash[:error] = @ingredient.errors.full_messages
-      redirect_to edit_ingredient_path(@ingredient)
+      render :edit
     end  
   end
 
@@ -58,7 +62,6 @@ class IngredientsController < ApplicationController
     flash[:notice] = "Ingredient deleted."
     redirect_to ingredients_path
   end
-
 
   private
 
