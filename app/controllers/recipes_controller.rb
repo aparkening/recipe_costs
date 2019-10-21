@@ -23,8 +23,8 @@ class RecipesController < ApplicationController
     binding.pry
     
     @user = User.find_by(id: params[:user_id])
-    
-    @recipes = @user.recipes.recipes_of_ingredient(ing)
+    @ingredient = Ingredient.find(params[:id])
+    @recipes = @user.recipes.recipes_of_ingredient(params[:id])
 
     render 'index'
   end
