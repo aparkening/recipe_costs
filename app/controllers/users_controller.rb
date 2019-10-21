@@ -18,6 +18,9 @@ class UsersController < ApplicationController
     redirect_non_users
     @user = User.find(params[:id])
     require_authorization(@user)
+
+    # Get all ingredients for ingredient selector
+    @ingredients = Ingredient.all.order(name: :asc)
   end
 
   # Display signup form
