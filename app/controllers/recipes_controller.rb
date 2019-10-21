@@ -8,10 +8,16 @@ class RecipesController < ApplicationController
       @user = User.find_by(id: params[:user_id])
       # @recipes = @user.recipes
     else
-      redirect_non_users
-      
+      redirect_non_users      
       @user = User.find_by(id: params[:user_id])
-      @recipes = @user.recipes
+
+      if params[:search]
+        # If search, find results
+		    @recipes = Recipe.users_recipes(@user).where('name LIKE ?', "%#{params[:search]}%").order('id DESC')
+      else      
+        # Show everything
+        @recipes = @user.recipes 
+      end
       # @recipes = Recipe.recipes_costs(@user)
     end
   end
