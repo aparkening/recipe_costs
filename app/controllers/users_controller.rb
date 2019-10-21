@@ -6,6 +6,7 @@ class UsersController < ApplicationController
   def index
     if is_admin?
       @users = User.all.order(name: :asc)
+      @user = current_user
     else
       return head(:forbidden)
       # redirect_to root_path, error: "You're not authorized to see this resource."
