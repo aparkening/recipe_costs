@@ -7,7 +7,7 @@ class UserIngredientCostsController < ApplicationController
     redirect_non_users
 
     @user = User.find_by(id: params[:user_id])
-    @user_ingredients = @user.user_ingredient_costs
+    @user_ingredient_costs = @user.user_ingredient_costs
   end
 
   # Display new form
@@ -15,41 +15,84 @@ class UserIngredientCostsController < ApplicationController
     redirect_non_users
 
     @user = User.find_by(id: params[:user_id])
-    @user_ingredient = Ingredient.new
+    @user_ingredient_cost = @user.user_ingredient_costs.build()
   end
 
-# Create record
-def create
-  redirect_non_users
-  
-  @user = User.find_by(id: params[:user_id])
-  params[:ingredient][:ingredient_id] = params[:ingredient][:id]
+  # Create record
+  def create
+    redirect_non_users
 
-  # ingredient = Ingredient.find(params[:ingredient][:id])
+    @user = User.find_by(id: params[:user_id])
+    params[:user_ingredient_cost][:ingredient_id] = params[:user_ingredient_cost][:id]
 
-
-  # Ensure current user can create for user
-  require_authorization(@user)
+    # Ensure current user can create for user
+    require_authorization(@user)
 
     # Create ingredient
-    @user_ingredient = @user.user_ingredient_costs.build(ing_params)
+    # @user_ingredient_cost = @user.user_ingredient_costs.build(ing_params)
+    @user_ingredient_cost = @user.user_ingredient_costs.build(params.require(:user_ingredient_cost).permit(:id, :ingredient_id, :cost, :cost_size, :cost_unit))
   
-    if @user_ingredient.save
+    if @user_ingredient_cost.save
       redirect_to user_ingredients_path(@user)
     else
-      # flash[:error] = ingredient.errors.full_messages
-      # redirect_to new_ingredient_path
+      # flash[:error] = @user_ingredient_cost.errors.full_messages
+      # redirect_to user_ingredient_path(@user)
       render 'new'
     end
   end
 
+  # Display record
   def show
+    redirect_to ingredients_path if is_admin?
+    redirect_non_users
+    
+    @user = User.find_by(id: params[:user_id])
+    # Require authorization
+    require_authorization(@user)
+
+    # Find record
+    @user_ingredient_cost = @user.user_ingredient_costs.find(params[:id])
+
+    # Redirect if error
+    redirect_to user_ingredients_path(@user), alert: "Custom cost not found." if @user_ingredient_cost.nil?
   end
 
+  # Display update form
   def edit
+    redirect_non_users
+    @user = User.find_by(id: params[:user_id])
+
+    # Require authorization
+    require_authorization(@user)
+
+    # Find record
+    @user_ingredient_cost = @user.user_ingredient_costs.find(params[:id])
+
+    # Redirect if error
+    redirect_to user_ingredients_path(@user), alert: "Custom cost not found." if @user_ingredient_cost.nil?
   end
 
+   # Update record
   def update
+    redirect_non_users
+    @user = User.find_by(id: params[:user_id])
+    
+    # Require authorization
+    require_authorization(@user)
+
+    # Find and update record
+    @user_ingredient_cost = @user.user_ingredient_costs.find(params[:id])
+    @user_ingredient_cost.update(params.require(:user_ingredient_cost).permit(:id, :cost, :cost_size, :cost_unit))
+
+    if @user_ingredient_cost.save
+      flash[:success] = "Success! Custom cost updated."
+      redirect_to user_ingredients_path(@user)
+    else
+      # flash[:error] = recipe.errors.full_messages
+      # redirect_to edit_user_recipe_path(user, recipe)
+      render :edit
+    end
+
   end
 
   # Delete record
@@ -60,18 +103,18 @@ def create
     # Require authorization
     require_authorization(user)
 
-    # Find and destroy ingredient
-    user_ingredient = user.user_ingredient_costs.find(params[:id])
-    user_ingredient.destroy
+    # Find and destroy record
+    user_ingredient_cost = user.user_ingredient_costs.find(params[:id])
+    user_ingredient_cost.destroy
 
-    flash[:notice] = "Custom ingredient removed."
+    flash[:notice] = "Custom cost removed."
     redirect_to user_ingredients_path(user)
   end
 
   private
 
   def ing_params
-    params.require(:ingredient).permit(:id, :ingredient_id, :cost, :cost_size, :cost_unit)
+    params.require(:user_ingredient_cost).permit(:id, :cost, :cost_size, :cost_unit)
   end
 
 end
