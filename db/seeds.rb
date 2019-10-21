@@ -58,9 +58,19 @@ pizza_dough = peter.recipes.create(name:"Pizza Dough", servings:6)
 # -> Upload full set from app/assets/ingredients.csv
 
 
+flour = Ingredient.new(name:"all-purpose flour", cost:20.49, cost_size:50, cost_unit:"lb")
+bread_flour = Ingredient.new(name:"bread flour",cost:18.49, cost_size:50, cost_unit:"lb")
+whole_wheat_flour = Ingredient.new(name:"whole wheat flour", cost:21.43,cost_size:50,cost_unit:"lb")
+yeast = Ingredient.new(name:"instant yeast", cost:48.99,cost_size:20,cost_unit:"lb")
+unsalted_butter = Ingredient.new(name:"unsalted butter", cost:107.92,cost_size:36,cost_unit:"lb")
+butter = Ingredient.new(name:"butter", cost:107.02,cost_size:36,cost_unit:"lb")
+milk = Ingredient.new(name:"milk", cost:3.99,cost_size:8,cost_unit:"lb")
+cream = Ingredient.new(name:"cream", cost:7.49,cost_size:2,cost_unit:"lb")
+baking_soda = Ingredient.new(name:"baking soda", cost:cost_unit:24.84,cost_size:50,cost_unit:"lb")
+
+
 # Add ingredients to recipes
 # -> Upload full set from recipe CSVs in app/assets
-
 
 
 ### Testing
