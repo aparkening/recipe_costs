@@ -2,7 +2,7 @@
 
 <div class="helper_links"><%= link_to "Add new cost", new_user_ingredient_path(@user) %></div>
 
-<h2>Current Ingredients</h2>
+<h2>Your Custom Costs</h2>
 <table class="table table-striped">
   <thead class="thead-dark">
     <tr>
@@ -22,6 +22,31 @@
         </small>
       </th>
       <th scope="row"><%= ingredient.ingredient.name %></td>
+      <td>$ <%= ingredient.cost %></td>
+      <td><%= ingredient.cost_size %></td>
+      <td><%= ingredient.cost_unit %></td>
+    </tr>  
+    <% end %>
+  </tbody>  
+</table>
+
+<hr class="my-4">
+
+
+<h2>System Ingredient Costs</h2>
+<table class="table table-striped">
+  <thead class="thead-dark">
+    <tr>
+      <th>Name</th>
+      <th>Cost</th>
+      <th>Cost Size</th>
+      <th>Cost Unit</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @ingredients.each do |ingredient| %>
+    <tr>
+      <th scope="row"><%= ingredient.name %></td>
       <td>$ <%= ingredient.cost %></td>
       <td><%= ingredient.cost_size %></td>
       <td><%= ingredient.cost_unit %></td>

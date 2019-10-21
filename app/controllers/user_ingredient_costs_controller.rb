@@ -7,7 +7,8 @@ class UserIngredientCostsController < ApplicationController
     redirect_non_users
 
     @user = User.find_by(id: params[:user_id])
-    @user_ingredient_costs = @user.user_ingredient_costs
+    @user_ingredient_costs = @user.user_ingredient_costs.order(name: :asc)
+    @ingredients = Ingredient.all.order(name: :asc)
   end
 
   # Display new form
