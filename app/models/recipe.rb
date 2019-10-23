@@ -53,47 +53,50 @@ class Recipe < ApplicationRecord
   end
 
 
+ ## Instance versions 
     # Calculate recipe cost
-    def recipe_cost
+    def ingredient_costs
       recipe_total = 0
       self.recipe_ingredients.map do |ingredient|
         # Add cost to ingredient
-        combo_ingredient = CombinedIngredient.new(ingredient)
+        combo_ingredient = CombinedIngredient.new(ingredient).total_cost
   
-        recipe_total += combo_ingredient.total_cost
+        # recipe_total += combo_ingredient.total_cost
       end
-  
-      # Add total cost to recipe
-      total_cost = recipe_total.round(2)
-  
-      # # Add per serving cost to recipe
-      # @per_serving_cost = (recipe_total/self.servings).round(2) if self.servings
-        
-      # binding.pry
     end
 
-  # Determine recipe cost
-  def self.recipes_costs(user)
-    recipes = Recipe.users_recipes(user)
-    recipe_total = 0
-
-    recipes.each do |recipe|
-      recipe.recipe_ingredients.each do |ingredient|
-        # Add cost to ingredient
-        combo_ingredient = CombinedIngredient.new(ingredient)
-
-        recipe_total += combo_ingredient.total_cost
-      end
-
-      # Add total cost to recipe
-      recipe.update(total_cost: recipe_total.round(2))
-      recipe.save
-
-      # # Add per serving cost to recipe
-      # recipe.per_serving_cost = (recipe_total/self.servings).round(2) if self.servings
-
+    def total_cost(ingredient_costs)
+      ingredient_costs.inject(0){|sum,x| sum + x }.round(2)
     end
-  end
+
+    def cost_per_serving(total_cost)
+      (total_cost/self.servings).round(2)
+    end
+
+
+  ## Class version    
+    # Determine recipe cost
+    def self.recipes_costs(user)
+      recipes = Recipe.users_recipes(user)
+      recipe_total = 0
+
+      recipes.each do |recipe|
+        recipe.recipe_ingredients.each do |ingredient|
+          # Add cost to ingredient
+          combo_ingredient = CombinedIngredient.new(ingredient)
+
+          recipe_total += combo_ingredient.total_cost
+        end
+
+        # Add total cost to recipe
+        recipe.update(total_cost: recipe_total.round(2))
+        recipe.save
+
+        # # Add per serving cost to recipe
+        # recipe.per_serving_cost = (recipe_total/self.servings).round(2) if self.servings
+
+      end
+    end
 
 
   # Writer for custom accepts_nested_attributes_for
