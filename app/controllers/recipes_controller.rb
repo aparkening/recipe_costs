@@ -16,7 +16,20 @@ class RecipesController < ApplicationController
 		    @recipes = Recipe.users_recipes(@user).where('name LIKE ?', "%#{params[:search]}%").order('id DESC')
       else      
         # Show everything
-        @recipes = @user.recipes 
+        # @recipes = @user.recipes 
+        @recipes = @user.recipes.includes(:recipe_ingredients) 
+
+        @recipes.each.map do |recipe|
+          recipe_ingredients = recipe.recipe_ingredients.map { |ingredient| CombinedIngredient.new(ingredient) }
+
+          # Total recipe cost
+          @recipe_total_cost = recipe.total_cost(recipe_ingredients)
+          
+          # Cost per serving
+          @recipe_cost_per_serving = recipe.cost_per_serving(@recipe_total_cost) if recipe.servings
+        end
+
+
       end
       # @recipes = Recipe.recipes_costs(@user)
     end
@@ -64,37 +77,16 @@ class RecipesController < ApplicationController
       @recipe = @user.recipes.find_by(id: params[:id])
     end
 
-    # If recipe exists, iterate through ingredients to calculate each cost and combine into total cost.
-
-    # How best to do this separating concerns?
-    # Costs are calculated on the instance level in CombinedIngredient
-
+    # If recipe exists, iterate through ingredients to calculate each cost and combine into total cost and cost per serving.
     if @recipe
-      @recipe_ingredient_costs = @recipe.ingredient_costs
-      @recipe_total_cost = @recipe.total_cost(@recipe_ingredient_costs)
+      # Map costs for each ingredient
+      @recipe_ingredients = @recipe.recipe_ingredients.map { |ingredient| CombinedIngredient.new(ingredient) }
+
+      # Total recipe cost
+      @recipe_total_cost = @recipe.total_cost(@recipe_ingredients)
+      
+      # Cost per serving
       @recipe_cost_per_serving = @recipe.cost_per_serving(@recipe_total_cost) if @recipe.servings
-
-      # Manually calculate costs
-      # @recipe_total = 0
-      # @recipe_ingredient_costs = @recipe.recipe_ingredients.map do |ingredient|
-
-      #   # Get right ingredient with latest costs
-      #   combo_ingredient = CombinedIngredient.new(ingredient)
-
-      #   # Get ingredient cost
-      #   total_cost = combo_ingredient.total_cost
-  
-      #   # Add to recipe total
-      #   @recipe_total += combo_ingredient.total_cost
-        
-      #   total_cost
-      # end 
-
-      # Round total cost
-      # @recipe_total = @recipe_total.round(2)
-
-      # Calculate cost per serving and round result
-      # @cost_per_serving = (@recipe_total/@recipe.servings).round(2) if @recipe.servings
     else
       flash[:alert] = "Recipe not found."
       redirect_to user_recipes_path(@user)
