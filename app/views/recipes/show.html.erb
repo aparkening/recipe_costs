@@ -19,12 +19,12 @@
     </tr>
   </thead>
   <tbody>
-    <% @recipe.recipe_ingredients.each_with_index do |recipe_ingredient, index| %>
+    <% @recipe_ingredients.each do |recipe_ingredient| %>
       <tr>
-        <td>$ <%= @recipe_ingredient_costs[index] %></td>
-        <th scope="row"><%= recipe_ingredient.ingredient.name %></th>
-        <td><%= recipe_ingredient.ingredient_amount %></td>
-        <td><%= recipe_ingredient.ingredient_unit %></td>
+        <td>$ <%= recipe_ingredient.total_cost %></td>
+        <th scope="row"><%= recipe_ingredient.name %></th>
+        <td><%= recipe_ingredient.amount %></td>
+        <td><%= recipe_ingredient.amount_unit %></td>
       </tr>  
     <% end %>
   </tbody>  
