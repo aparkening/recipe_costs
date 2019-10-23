@@ -55,47 +55,23 @@ class Recipe < ApplicationRecord
 
  ## Instance versions 
     # Calculate recipe cost
-    def ingredient_costs
-      recipe_total = 0
-      self.recipe_ingredients.map do |ingredient|
-        # Add cost to ingredient
-        combo_ingredient = CombinedIngredient.new(ingredient).total_cost
-  
-        # recipe_total += combo_ingredient.total_cost
-      end
-    end
+    # def ingredient_costs
+    #   recipe_total = 0
+    #   self.recipe_ingredients.map do |ingredient|
+    #     # Add cost to ingredient
+    #     combo_ingredient = CombinedIngredient.new(ingredient).total_cost
+    #     # recipe_total += combo_ingredient.total_cost
+    #   end
+    # end
 
+    # Calculate total recipe cost
     def total_cost(ingredient_costs)
-      ingredient_costs.inject(0){|sum,x| sum + x }.round(2)
+      ingredient_costs.inject(0){|sum,x| sum + x.total_cost }.round(2)
     end
 
+    # Calculate recipe cost per serving
     def cost_per_serving(total_cost)
       (total_cost/self.servings).round(2)
-    end
-
-
-  ## Class version    
-    # Determine recipe cost
-    def self.recipes_costs(user)
-      recipes = Recipe.users_recipes(user)
-      recipe_total = 0
-
-      recipes.each do |recipe|
-        recipe.recipe_ingredients.each do |ingredient|
-          # Add cost to ingredient
-          combo_ingredient = CombinedIngredient.new(ingredient)
-
-          recipe_total += combo_ingredient.total_cost
-        end
-
-        # Add total cost to recipe
-        recipe.update(total_cost: recipe_total.round(2))
-        recipe.save
-
-        # # Add per serving cost to recipe
-        # recipe.per_serving_cost = (recipe_total/self.servings).round(2) if self.servings
-
-      end
     end
 
 
