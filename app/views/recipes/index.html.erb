@@ -8,8 +8,7 @@
 		  <%= submit_tag 'Search', name: nil %>
 		<% end %>
 
-  <div class="mt-3 mb-3"><a class="btn btn-primary" href="<%= new_user_recipe_path(@user) %>" role="button">Add new recipe</a></div>
-
+    <%= render partial: 'add_button', locals: {path: new_user_recipe_path(@user), text: "Add new recipe"} %>
 <% end %>
 
 <% if @ingredient %>
