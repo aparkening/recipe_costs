@@ -1,6 +1,6 @@
 <h1>Custom Ingredient Costs</h1>
 
-<div class="helper_links"><%= link_to "Add new cost", new_user_ingredient_path(@user) %></div>
+<%= render partial: 'add_button', locals: {path: new_user_ingredient_path(@user), text: "Add new cost"} %>
 
 <h2>Your Custom Costs</h2>
 <table class="table table-striped">
