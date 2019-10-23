@@ -1,4 +1,6 @@
 <%= form_tag(user_recipes_path(@user), method: :get, class: "form-inline my-2 my-lg-0") do %>
 	<%= text_field_tag :search, params[:search], placeholder: "Find Recipes", class: "form-control mr-sm-2"  %>  
-	<%= submit_tag 'Search', name: nil, class: "btn btn-secondary my-2" %>
+	<%= submit_tag 'Search', name: nil, class: "btn btn-secondary" %>
 <% end %>
+
+
