@@ -18,18 +18,18 @@ class Recipe < ApplicationRecord
     message: 'must be unique.' 
   }
 
-  # Scope to return user's recipes
+  # Return user's recipes
   scope :users_recipes, -> (user) {where(user_id: user.id)}
     # call with Recipe.users_recipes(user)
   
-  # Scope to return user's recipes by ingredient
+  # Return user's recipes by ingredient
   scope :recipes_of_ingredient, -> (ingredient) { joins(:ingredients).where(ingredients: {id: ingredient}) }
 
-  # Scope to return all user's ingredients used in recipes
+  # Return all user's ingredients used in recipes
   scope :all_ingredients, -> { joins(:ingredients).select("ingredients.*") }
 
 
-  # Class import method for CSVs 
+  # CSV Import
   def self.import(file, user)
     # Create hash by looping through each row
     CSV.foreach(file.path, headers: true) do |row|
