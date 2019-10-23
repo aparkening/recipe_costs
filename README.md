@@ -4,10 +4,12 @@ Professional kitchens need to know their recipe costs to profitably price their 
 
 **App Features**
 - Users can log in directly or with their Google account.
-- Authenticated users can create, read, update, and delete their own recipes, ingredients, and categories.
+- Authenticated users can create, read, update, and delete their own recipes and ingredients.
 - Recipe costs are calculated per recipe and per serving.
 - Ingredient conversions are automatic. Recipe amounts entered as cups will seamlessly take advantage of costs entered as liters or gallons, for example.
 - App-wide ingredients and default costs provide faster recipe creation, and users can customize ingredient prices for their own recipes.
+- Users can browse their full recipe list or recipes by ingredient.
+
 
 ## Installation
 
