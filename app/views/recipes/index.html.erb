@@ -2,12 +2,6 @@
   <h1>All Recipes</h1>
 <% else %>
   <h1><%= @user.name %> Recipes</h1>
-
-    <%= form_tag(user_recipes_path(@user), method: :get) do %>
-		  <%= text_field_tag :search, params[:search], placeholder: "Find Recipes", class: "form-control"  %>  
-		  <%= submit_tag 'Search', name: nil %>
-		<% end %>
-
     <%= render partial: 'add_button', locals: {path: new_user_recipe_path(@user), text: "Add new recipe"} %>
 <% end %>
 
