@@ -51,12 +51,9 @@ class RecipesController < ApplicationController
 
   # Display record
   def show
-    # if is_admin?
-    #   @recipe = Recipe.find(params[:id])
-    #   @user = @recipe.user
-    # else
     redirect_non_users
     @user = User.find_by(id: params[:user_id])
+    
     # Require authorization
     require_authorization(@user)
 
@@ -67,24 +64,37 @@ class RecipesController < ApplicationController
       @recipe = @user.recipes.find_by(id: params[:id])
     end
 
-    if @recipe
-      # ** Mark: Make more MVC **
-      # Manually calculate costs
-      @recipe_total = 0
-      @recipe_ingredient_costs = @recipe.recipe_ingredients.map do |ingredient|
-        # Get right ingredient with latest costs
-        combo_ingredient = CombinedIngredient.new(ingredient)
+    # If recipe exists, iterate through ingredients to calculate each cost and combine into total cost.
 
-        # Get ingredient cost
-        total_cost = combo_ingredient.total_cost
+    # How best to do this separating concerns?
+    # Costs are calculated on the instance level in CombinedIngredient
+
+    if @recipe
+      @recipe_ingredient_costs = @recipe.ingredient_costs
+      @recipe_total_cost = @recipe.total_cost(@recipe_ingredient_costs)
+      @recipe_cost_per_serving = @recipe.cost_per_serving(@recipe_total_cost) if @recipe.servings
+
+      # Manually calculate costs
+      # @recipe_total = 0
+      # @recipe_ingredient_costs = @recipe.recipe_ingredients.map do |ingredient|
+
+      #   # Get right ingredient with latest costs
+      #   combo_ingredient = CombinedIngredient.new(ingredient)
+
+      #   # Get ingredient cost
+      #   total_cost = combo_ingredient.total_cost
   
-        # Add to recipe total
-        @recipe_total += combo_ingredient.total_cost
+      #   # Add to recipe total
+      #   @recipe_total += combo_ingredient.total_cost
         
-        total_cost
-      end 
-      @recipe_total = @recipe_total.round(2)
-      @cost_per_serving = (@recipe_total/@recipe.servings).round(2) if @recipe.servings
+      #   total_cost
+      # end 
+
+      # Round total cost
+      # @recipe_total = @recipe_total.round(2)
+
+      # Calculate cost per serving and round result
+      # @cost_per_serving = (@recipe_total/@recipe.servings).round(2) if @recipe.servings
     else
       flash[:alert] = "Recipe not found."
       redirect_to user_recipes_path(@user)
