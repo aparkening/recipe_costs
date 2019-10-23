@@ -20,15 +20,30 @@
   <thead class="thead-dark">
     <tr>
       <th>Name</th>
+       <% if @recipe_costs %><th>Cost</th><% end %>
       <th>Links</th>
     </tr>
   </thead>
   <tbody>
-    <% @recipes.each do |recipe| %>  
-      <tr>
-        <th scope="row"><%= link_to recipe.name, user_recipe_path(@user, recipe) %></th>
-        <td><small><%= link_to 'Edit', edit_user_recipe_path(@user, recipe), class:'text-muted' %> | <%= link_to "Delete", user_recipe_path(recipe.user, recipe), method: :delete, class:'text-muted', data: { confirm: "Are you sure?" } %></small></td>
-      </tr>  
+    <% if @recipe_costs %>
+      <% @recipe_costs.each do |recipe| %>    
+        <tr>
+          <th scope="row"><%= link_to recipe[:name], user_recipe_path(@user, recipe[:id]) %></th>
+          <td>$<%= recipe[:total_cost] %>
+           <% if recipe[:cost_per_serving] %>
+            &nbsp;|&nbsp; per serving: $<%= recipe[:cost_per_serving] %>
+            <% end %>
+          </td>
+          <td><small><%= link_to 'Edit', edit_user_recipe_path(@user, recipe[:id]), class:'text-muted' %> | <%= link_to "Delete", user_recipe_path(recipe[:user_id], recipe[:id]), method: :delete, class:'text-muted', data: { confirm: "Are you sure?" } %></small></td>
+        </tr>  
+      <% end %>
+    <% else %>
+      <% @recipes.each do |recipe| %>        
+        <tr>
+          <th scope="row"><%= link_to recipe.name, user_recipe_path(@user, recipe) %></th>
+          <td><small><%= link_to 'Edit', edit_user_recipe_path(@user, recipe), class:'text-muted' %> | <%= link_to "Delete", user_recipe_path(recipe.user, recipe), method: :delete, class:'text-muted', data: { confirm: "Are you sure?" } %></small></td>
+        </tr>  
+      <% end %>
     <% end %>
   </tbody>  
 </table>
