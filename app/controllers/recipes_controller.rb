@@ -6,7 +6,12 @@ class RecipesController < ApplicationController
     if is_admin?
       @recipes = Recipe.all
       @user = User.find_by(id: params[:user_id])
-      # @recipes = @user.recipes
+
+      # Admin search matches all recipes
+      if params[:search]
+        # If search, find results
+		    @recipes = Recipe.where('name LIKE ?', "%#{params[:search]}%").order('id DESC')
+      end
     else
       redirect_non_users      
       @user = User.find_by(id: params[:user_id])
@@ -14,9 +19,8 @@ class RecipesController < ApplicationController
       if params[:search]
         # If search, find results
 		    @recipes = Recipe.users_recipes(@user).where('name LIKE ?', "%#{params[:search]}%").order('id DESC')
-      else      
+      else
         # Show everything
-        # @recipes = @user.recipes 
         @recipes = @user.recipes.includes(:recipe_ingredients) 
       end
 
