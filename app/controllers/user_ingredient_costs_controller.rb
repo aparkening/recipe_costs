@@ -23,16 +23,22 @@ class UserIngredientCostsController < ApplicationController
   def create
     redirect_non_users
 
+    # Set user
     @user = User.find_by(id: params[:user_id])
+    
+    # Set ingredient_id from select list id
     params[:user_ingredient_cost][:ingredient_id] = params[:user_ingredient_cost][:id]
 
     # Ensure current user can create for user
     require_authorization(@user)
 
-    # Create ingredient
+    # Create ingredient specifying id
     # @user_ingredient_cost = @user.user_ingredient_costs.build(ing_params)
-    @user_ingredient_cost = @user.user_ingredient_costs.build(params.require(:user_ingredient_cost).permit(:id, :ingredient_id, :cost, :cost_size, :cost_unit))
+    # @user_ingredient_cost = @user.user_ingredient_costs.build(params.require(:user_ingredient_cost).permit(:id, :ingredient_id, :cost, :cost_size, :cost_unit))
   
+    # Create ingredient
+    @user_ingredient_cost = @user.user_ingredient_costs.build(params.require(:user_ingredient_cost).permit(:ingredient_id, :cost, :cost_size, :cost_unit))
+
     if @user_ingredient_cost.save
       redirect_to user_ingredients_path(@user)
     else
@@ -115,7 +121,7 @@ class UserIngredientCostsController < ApplicationController
   private
 
   def ing_params
-    params.require(:user_ingredient_cost).permit(:id, :cost, :cost_size, :cost_unit)
+    params.require(:user_ingredient_cost).permit(:cost, :cost_size, :cost_unit)
   end
 
 end
