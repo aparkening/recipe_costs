@@ -18,6 +18,7 @@ class IngredientsController < ApplicationController
     params[:ingredient][:name] = params[:ingredient][:name].downcase
     ingredient = Ingredient.new(ing_params)
     if ingredient.save
+      flash[:success] = "Success! #{params[:ingredient][:name].titleize} created."
       redirect_to ingredients_path
     else
       flash[:error] = ingredient.errors.full_messages
@@ -42,7 +43,7 @@ class IngredientsController < ApplicationController
     @ingredient.update(ing_params)
 
     if @ingredient.save
-      flash[:success] = "Success! #{@ingredient.name.capitalize} updated."
+      flash[:success] = "Success! #{@ingredient.name.titleize} updated."
       redirect_to ingredients_path
     else
       render :edit
@@ -58,8 +59,8 @@ class IngredientsController < ApplicationController
   # Delete record
   def destroy
     ingredient = Ingredient.find(params[:id])
+    flash[:notice] = "Success! #{ingredient.name.titleize} deleted."
     ingredient.destroy
-    flash[:notice] = "Ingredient deleted."
     redirect_to ingredients_path
   end
 
