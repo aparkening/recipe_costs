@@ -26,25 +26,17 @@ class UserIngredientCostsController < ApplicationController
     # Set user
     @user = User.find_by(id: params[:user_id])
     
-    # Set ingredient_id from select list id
-    params[:user_ingredient_cost][:ingredient_id] = params[:user_ingredient_cost][:id]
-
-    # Ensure current user can create for user
+    # Ensure current user is authorized
     require_authorization(@user)
 
-    # Create ingredient specifying id
-    # @user_ingredient_cost = @user.user_ingredient_costs.build(ing_params)
-    # @user_ingredient_cost = @user.user_ingredient_costs.build(params.require(:user_ingredient_cost).permit(:id, :ingredient_id, :cost, :cost_size, :cost_unit))
-  
     # Create ingredient
     @user_ingredient_cost = @user.user_ingredient_costs.build(params.require(:user_ingredient_cost).permit(:ingredient_id, :cost, :cost_size, :cost_unit))
 
+    # Redirect unless error
     if @user_ingredient_cost.save
       redirect_to user_ingredients_path(@user)
     else
-      # flash[:error] = @user_ingredient_cost.errors.full_messages
-      # redirect_to user_ingredient_path(@user)
-      render 'new'
+      render :new
     end
   end
 
@@ -89,7 +81,7 @@ class UserIngredientCostsController < ApplicationController
 
     # Find and update record
     @user_ingredient_cost = @user.user_ingredient_costs.find(params[:id])
-    @user_ingredient_cost.update(params.require(:user_ingredient_cost).permit(:id, :cost, :cost_size, :cost_unit))
+    @user_ingredient_cost.update(params.require(:user_ingredient_cost).permit(:cost, :cost_size, :cost_unit))
 
     if @user_ingredient_cost.save
       flash[:success] = "Success! Custom cost updated."
