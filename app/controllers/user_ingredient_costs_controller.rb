@@ -34,6 +34,7 @@ class UserIngredientCostsController < ApplicationController
 
     # Redirect unless error
     if @user_ingredient_cost.save
+      flash[:success] = "Success! Custom cost created."
       redirect_to user_ingredients_path(@user)
     else
       render :new
