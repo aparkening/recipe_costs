@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
       session[:user_id] = @user.id
       redirect_to user_path(@user)
     else
-      flash[:error] = "Credentials don't work. Please check your name and password." 
+      flash[:error] = "Invalid credentials. Please check your name and password." 
       redirect_to login_path
     end
   end
@@ -41,7 +41,7 @@ class SessionsController < ApplicationController
       session[:user_id] = user.id
       redirect_to user_path(user)
     else
-      flash[:error] = "Credentials don't work. Please try again."
+      flash[:error] = "Invalid credentials. Please try again."
       redirect_to login_path
     end
   end
