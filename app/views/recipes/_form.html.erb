@@ -1,30 +1,47 @@
-<%= form_for recipe, url: [user, recipe] do |f| %>
+<%= render "application/errors", object: recipe %>
 
-  <div class="form-group">
-    <%= f.label :name, 'Name*' %>
-    <%= f.text_field :name, class:'form-control', required:true %>
-  </div>
-  <div class="form-group">
-    <%= f.label :servings %>
-    <%= f.text_field :servings, class:'form-control' %>
-  </div>
+<fieldset class="border border-muted rounded px-3 pt-3 my-3">
 
-  <div class="form-group">
-    <h3>Ingredients</h3>
-    <%= f.fields_for :recipe_ingredients do |ing| %>    
-      <%= ing.collection_select :ingredient_id, Ingredient.all, :id, :name, {include_blank: true} %>
+  <%= form_with model: recipe, url: [user, recipe], local: true do |f| %>
 
-      <%= ing.label :ingredient_amount, 'Size' %>
-      <%= ing.text_field :ingredient_amount, placeholder:'example: 5' %>
-      
-      <%= ing.label :ingredient_unit, 'Unit' %>
-      <%= ing.text_field :ingredient_unit, placeholder:'example: lb' %>
+    <div class="form-row">
+      <div class="form-group col-9">
+        <%= f.label :name, 'Name*' %>
+        <%= f.text_field :name, class:'form-control', required:true %>
+      </div>
+      <div class="form-group col-3">
+        <%= f.label :servings %>
+        <%= f.text_field :servings, class:'form-control' %>
+      </div>
+    </div><!-- /form-row -->
 
-      <%= ing.check_box :_destroy %> <%= f.label :_destroy, value: "Remove"%><br />
-    <% end %>
-  </div>
+    <div class="form-group">
+      <h3>Ingredients</h3>
 
-  <div class="form-group">
-    <%= f.submit class:'btn btn-lg btn-primary btn-block' %>
-  </div>
-<% end %>
+      <%= f.fields_for :recipe_ingredients do |ing| %>   
+        <div class="form-row mb-3"> 
+          <div class="col-7">
+            <%= ing.collection_select :ingredient_id, Ingredient.all.order(name: :asc), :id, :name, {include_blank: true}, class: 'custom-select'  %>
+          </div>
+
+          <div class="col-2">
+            <%= ing.text_field :ingredient_amount, class:'form-control', placeholder:'ex: 5' %>
+          </div>
+          
+          <div class="col-2">
+            <% units_array = @units.map { |unit| [unit, unit] } %>
+            <%= ing.select(:ingredient_unit, units_array, {}, {:class=>'custom-select'}) %>
+          </div>
+
+          <div class="col pt-2 small text-muted">
+            <%= ing.check_box :_destroy %> <%= f.label :_destroy, value: "Remove"%>
+          </div>
+        </div><!-- /form-row -->
+      <% end %>
+    </div>
+
+    <div class="form-group">
+      <%= f.submit class:'btn btn-lg btn-primary btn-block' %>
+    </div>
+  <% end %>
+</fieldset>
