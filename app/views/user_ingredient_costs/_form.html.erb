@@ -1,27 +1,35 @@
 <%= render "application/errors", object: ing_cost %>
 
-<%= form_with model: ing_cost, url: url, local: true do |f| %>
+<fieldset class="border border-muted rounded px-3 pt-3 my-3">
 
-  <% if action == "Create" %>
+  <%= form_with model: ing_cost, url: url, local: true do |f| %>
+
+    <% if action == "Create" %>
+      <div class="form-group">
+        <%= f.collection_select :ingredient_id, Ingredient.all.order(name: :asc), :id, :name, {}, class: 'custom-select' %>
+      </div>
+    <% end %>
+
+    <div class="form-row">
+      <div class="form-group col-4">
+        <%= f.label :cost %>
+        <%= f.text_field :cost, class:'form-control', placeholder: 'ex: 12.35', required:true %>
+        <small id="costHelp" class="form-text text-muted">Don't include $</small>
+      </div>
+
+      <div class="form-group col-4">
+        <%= f.label :cost_size, 'Size' %>
+        <%= f.text_field :cost_size, class:'form-control', placeholder: 'ex: 5',required:true %>
+      </div>
+
+      <div class="form-group col-4">
+        <%= f.label :cost_unit, 'Unit' %>
+        <%= f.text_field :cost_unit, class:'form-control', placeholder:'ex: lb', required:true %>
+      </div>
+    </div><!-- /form-row -->
+
     <div class="form-group">
-      <%= f.collection_select :ingredient_id, Ingredient.all, :id, :name %>
+      <%= f.submit value: "#{action} Custom Cost", class:'btn btn-lg btn-primary btn-block' %>
     </div>
   <% end %>
-
-  <div class="form-group">
-    <%= f.label :cost %>
-    <%= f.text_field :cost, class:'form-control', placeholder: 'example: 12', required:true %>
-    <small id="costHelp" class="form-text text-muted">No need to include $</small>
-  </div>
-  <div class="form-group">
-    <%= f.label :cost_unit, 'Unit' %>
-    <%= f.text_field :cost_unit, class:'form-control', placeholder:'example: lb', required:true %>
-  </div>
-  <div class="form-group">
-    <%= f.label :cost_size, 'Size' %>
-    <%= f.text_field :cost_size, class:'form-control', placeholder: 'example: 5',required:true %>
-  </div>
-  <div class="form-group">
-    <%= f.submit value: "#{action} Custom Cost", class:'btn btn-lg btn-primary btn-block' %>
-  </div>
-<% end %>
+</fieldset>
