@@ -1,3 +1,3 @@
 <h1>Edit Custom Cost: <%= @user_ingredient_cost.ingredient.name %></h1>
 
-<%= render "form", ing_cost: @user_ingredient_cost, url: user_ingredient_path(@user), action: "Update" %>
+<%= render "ingredients/form", obj: @user_ingredient_cost, url: user_ingredient_path(@user), submit_label: "Update Custom Cost" %>

@@ -1,3 +1,3 @@
 <h1>Edit <%= @ingredient.name %></h1>
 
-<%= render "form" %>
+<%= render "form", obj: @ingredient, url: ingredient_path, submit_label: "Update Ingredient" %>
