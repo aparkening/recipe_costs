@@ -6,6 +6,12 @@ class ApplicationController < ActionController::Base
     redirect_to @current_user if current_user
   end
 
+  # Set ingredient units. Too many extraneous units in Measured; manual list easier.
+  def available_units
+    all_units = ['gram', 'kg', 'lb', 'oz', 'liter', 'gal', 'qt', 'pt', 'us_fl_oz', 'tsp', 'tbsp', 'cup', 'each'].sort
+    return all_units
+	end
+
   # Set current user
 	def current_user
 	  @current_user ||= User.find(session[:user_id]) if session[:user_id].present?

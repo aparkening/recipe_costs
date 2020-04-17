@@ -114,9 +114,9 @@ class RecipesController < ApplicationController
   def new
     redirect_non_users
     @user = User.find_by(id: params[:user_id])
-
     @recipe = Recipe.new(user_id: params[:user_id])
-      
+    @units = available_units  
+
     # Display 10 ingredient fields
     10.times{ @recipe.recipe_ingredients.build() }
   end
@@ -145,7 +145,8 @@ class RecipesController < ApplicationController
   def edit
     redirect_non_users
     @user = User.find_by(id: params[:user_id])
-
+    @units = available_units  
+    
     # Require authorization
     require_authorization(@user)
 
