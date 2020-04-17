@@ -146,7 +146,7 @@ class RecipesController < ApplicationController
     redirect_non_users
     @user = User.find_by(id: params[:user_id])
     @units = available_units  
-    
+
     # Require authorization
     require_authorization(@user)
 
