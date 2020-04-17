@@ -36,3 +36,6 @@ yarn-debug.log*
 
 # Ignore dotenv
 .env
+
+# Ignore Apple file system
+.DS_store
