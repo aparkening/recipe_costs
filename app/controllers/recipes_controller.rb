@@ -148,7 +148,7 @@ class RecipesController < ApplicationController
     require_authorization(@user)
     
     # Find and update record
-    @recipe = Recipe.find(params[:id])
+    @recipe = Recipe.find_by(id: params[:id])
     @recipe.update(recipe_params)
 
     # Redirect unless error
@@ -176,7 +176,7 @@ class RecipesController < ApplicationController
     require_authorization(@user)
 
     # Find record
-    recipe = Recipe.find(params[:id])
+    recipe = Recipe.find_by(id: params[:id])
     
     # Destroy unless error
     if recipe
