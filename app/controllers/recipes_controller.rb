@@ -6,23 +6,22 @@ class RecipesController < ApplicationController
   # Display all user's recipes
   def index
     if is_admin?
-      @recipes = Recipe.all
-
       # Admin search matches all recipes
       if params[:search]
-        # If search, find results
 		    @recipes = Recipe.where('name LIKE ?', "%#{params[:search]}%").order('id DESC')
-      end
+      # Else show all recipes
+      else
+        @recipes = Recipe.all 
+      end  
     else
       if params[:search]
-        # If search, find results
 		    @recipes = Recipe.users_recipes(@user).where('name LIKE ?', "%#{params[:search]}%").order('id DESC')
+      # Else show this user's recipes
       else
-        # Show everything
         @recipes = @user.recipes.includes(:recipe_ingredients) 
       end
 
-      # Map ingredient costs
+      # Map ingredient costs with new_recipe hash
       @recipe_costs = @recipes.map do |recipe|
         new_recipe = {}
 
@@ -35,18 +34,13 @@ class RecipesController < ApplicationController
         new_recipe[:ingredients] = recipe.recipe_ingredients.map { |ingredient| CombinedIngredient.new(ingredient) }
 
         # Calculate total cost
-        # cost << recipe.total_cost(recipe_ingredients)
         new_recipe[:total_cost] = recipe.total_cost(new_recipe[:ingredients])
 
         # Calculate cost per serving
-        # cost << recipe.cost_per_serving(recipe.total_cost(recipe_ingredients)) if recipe.servings
         new_recipe[:cost_per_serving] = recipe.cost_per_serving(new_recipe[:total_cost]) if recipe.servings
 
         new_recipe
       end 
-
-      # binding.pry
-      # @recipes = Recipe.recipes_costs(@user)
     end
   end
 
@@ -55,48 +49,22 @@ class RecipesController < ApplicationController
     # If ingredient exists, find recipes that use it
     if Ingredient.exists?(params[:id])
       @ingredient = Ingredient.find(params[:id])
+      
+      # Show all recipes from ingredient for admins
       if is_admin?
-        # Show all recipes from ingredient for admins
         @recipes = Recipe.recipes_of_ingredient(params[:id])
+      # Else only show this user's recipes
       else
-        # Only show user's recipes
         @recipes = @user.recipes.recipes_of_ingredient(params[:id])
       end
+    
+    # Else show all user's recipes  
     else
       flash[:alert] = "That ingredient wasn't found."
-
-      # Else show all users' recipes
       @recipes = @user.recipes
     end
 
     render 'index'
-  end
-
-  # Display record
-  def show
-    require_authorization(@user)
-
-    # Search all recipes for admin; subset for user
-    if is_admin?
-      @recipe = Recipe.find_by(id: params[:id])
-    else 
-      @recipe = @user.recipes.find_by(id: params[:id])
-    end
-
-    # If recipe exists, iterate through ingredients to calculate each cost and combine into total cost and cost per serving.
-    if @recipe
-      # Map costs for each ingredient
-      @recipe_ingredients = @recipe.recipe_ingredients.map { |ingredient| CombinedIngredient.new(ingredient) }
-
-      # Total recipe cost
-      @recipe_total_cost = @recipe.total_cost(@recipe_ingredients)
-      
-      # Cost per serving
-      @recipe_cost_per_serving = @recipe.cost_per_serving(@recipe_total_cost) if @recipe.servings
-    else
-      flash[:alert] = "Recipe not found."
-      redirect_to user_recipes_path(@user)
-    end
   end
 
   # Display new form
@@ -114,12 +82,41 @@ class RecipesController < ApplicationController
     # Create recipe
     @recipe = @user.recipes.build(recipe_params)
 
+    # Redirect unless error
     if @recipe.save
+      flash[:success] = "Success! #{@recipe.name.titleize} created."
       redirect_to user_recipe_path(@user, @recipe)
     else
-      # flash[:error] = @recipe.errors.full_messages
-      # redirect_to new_user_recipe_path(user, recipe)
       render :new
+    end
+  end
+
+  # Display record
+  def show
+    require_authorization(@user)
+
+    # Find recipe within all recipes for admin; within subset for user
+    if is_admin?
+      @recipe = Recipe.find_by(id: params[:id])
+    else 
+      @recipe = @user.recipes.find_by(id: params[:id])
+    end
+
+    # If recipe exists, iterate through ingredients to calculate each cost and combine into total cost and cost per serving.
+    if @recipe
+      # Map costs for each ingredient
+      @recipe_ingredients = @recipe.recipe_ingredients.map { |ingredient| CombinedIngredient.new(ingredient) }
+
+      # Total recipe cost
+      @recipe_total_cost = @recipe.total_cost(@recipe_ingredients)
+      
+      # Cost per serving
+      @recipe_cost_per_serving = @recipe.cost_per_serving(@recipe_total_cost) if @recipe.servings
+    
+    # Redirect if error
+    else
+      flash[:alert] = "Recipe not found."
+      redirect_to user_recipes_path(@user)
     end
   end
 
@@ -171,6 +168,7 @@ class RecipesController < ApplicationController
   def destroy
     require_authorization(@user)
 
+    # Find record
     recipe = Recipe.find(params[:id])
     
     # Manually delete recipe_ingredients, since dependent: :destroy isn't working.
@@ -178,7 +176,7 @@ class RecipesController < ApplicationController
       ri.destroy
     end
 
-    flash[:notice] = "Success!! #{recipe.name} deleted."
+    flash[:notice] = "Success! #{recipe.name} deleted."
     recipe.destroy
     redirect_to user_recipes_path(@user)
   end
