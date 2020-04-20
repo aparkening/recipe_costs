@@ -5,7 +5,6 @@
 <p>-or-</p>
 
 <%= form_with url: "/login", class: "form-signin", local: true do |f| %>
-
   <%= f.label :name, class:'sr-only' %>
   <%= f.text_field :name, class:'form-control', placeholder:'Name', required:true  %>
   <%= f.label :password, class:'sr-only' %>
