@@ -10,26 +10,26 @@ class IngredientsController < ApplicationController
   # Display new form
   def new
     @ingredient = Ingredient.new
+    @units = available_units  
   end
 
   # Create record
   def create
     # Make name lowercase
     params[:ingredient][:name] = params[:ingredient][:name].downcase
-    ingredient = Ingredient.new(ing_params)
-    if ingredient.save
-      flash[:success] = "Success! #{params[:ingredient][:name].titleize} created."
+    @ingredient = Ingredient.new(ing_params)
+    if @ingredient.save
+      flash[:success] = "Success! #{@ingredient.name.titleize} created."
       redirect_to ingredients_path
     else
-      flash[:error] = ingredient.errors.full_messages
-      redirect_to new_ingredient_path
-      # render 'new'
+      render :new
     end
   end
 
   # Display edit form
   def edit
     @ingredient = Ingredient.find_by(id: params[:id])
+    @units = available_units
 
     redirect_to ingredients_path, alert: "Ingredient not found." if @ingredient.nil?
   end
