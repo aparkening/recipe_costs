@@ -49,7 +49,7 @@ class UserIngredientCostsController < ApplicationController
     require_authorization(@user)
 
     # Find record
-    @user_ingredient_cost = @user.user_ingredient_costs.find(params[:id])
+    @user_ingredient_cost = @user.user_ingredient_costs.find_by(id: params[:id])
 
     # Redirect if error
     redirect_to user_ingredients_path(@user), alert: "Custom cost not found." if @user_ingredient_cost.nil?
