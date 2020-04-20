@@ -1,33 +1,23 @@
 class UserIngredientCostsController < ApplicationController
   before_action :require_login
+  before_action :redirect_non_users
+  before_action :set_variables
 
   # All records
   def index
-    redirect_to ingredients_path if is_admin?
-    redirect_non_users
+    # redirect_to ingredients_path if is_admin?
 
-    @user = User.find_by(id: params[:user_id])
     @user_ingredient_costs = @user.user_ingredient_costs.order(name: :asc)
     @ingredients = Ingredient.all.order(name: :asc)
   end
 
   # Display new form
   def new
-    redirect_non_users
-
-    @user = User.find_by(id: params[:user_id])
     @user_ingredient_cost = @user.user_ingredient_costs.build()
-    @units = available_units  
   end
 
   # Create record
   def create
-    redirect_non_users
-
-    # Set user
-    @user = User.find_by(id: params[:user_id])
-    
-    # Ensure current user is authorized
     require_authorization(@user)
 
     # Create ingredient
@@ -35,7 +25,7 @@ class UserIngredientCostsController < ApplicationController
 
     # Redirect unless error
     if @user_ingredient_cost.save
-      flash[:success] = "Success! #{@user_ingredient_cost.ingredient.name.titleize}  created."
+      flash[:success] = "Success! #{@user_ingredient_cost.ingredient.name.titleize} created."
       redirect_to user_ingredients_path(@user)
     else
       render :new
@@ -44,11 +34,7 @@ class UserIngredientCostsController < ApplicationController
 
   # Display record
   def show
-    redirect_to ingredients_path if is_admin?
-    redirect_non_users
-    
-    @user = User.find_by(id: params[:user_id])
-    # Require authorization
+    # redirect_to ingredients_path if is_admin?
     require_authorization(@user)
 
     # Find record
@@ -58,13 +44,8 @@ class UserIngredientCostsController < ApplicationController
     redirect_to user_ingredients_path(@user), alert: "Custom cost not found." if @user_ingredient_cost.nil?
   end
 
-  # Display update form
+  # Display edit form
   def edit
-    redirect_non_users
-    @user = User.find_by(id: params[:user_id])
-    @units = available_units  
-
-    # Require authorization
     require_authorization(@user)
 
     # Find record
@@ -76,22 +57,17 @@ class UserIngredientCostsController < ApplicationController
 
    # Update record
   def update
-    redirect_non_users
-    @user = User.find_by(id: params[:user_id])
-    
-    # Require authorization
     require_authorization(@user)
 
     # Find and update record
     @user_ingredient_cost = @user.user_ingredient_costs.find(params[:id])
     @user_ingredient_cost.update(params.require(:user_ingredient_cost).permit(:cost, :cost_size, :cost_unit))
 
+    # Redirect unless error
     if @user_ingredient_cost.save
-      flash[:success] = "Success! Custom cost updated."
+      flash[:success] = "Success! #{@user_ingredient_cost.ingredient.name.titleize} updated."
       redirect_to user_ingredients_path(@user)
     else
-      # flash[:error] = recipe.errors.full_messages
-      # redirect_to edit_user_recipe_path(user, recipe)
       render :edit
     end
 
@@ -99,21 +75,21 @@ class UserIngredientCostsController < ApplicationController
 
   # Delete record
   def destroy
-    redirect_non_users
-    user = User.find_by(id: params[:user_id])
-
-    # Require authorization
-    require_authorization(user)
+    require_authorization(@user)
 
     # Find and destroy record
     user_ingredient_cost = user.user_ingredient_costs.find(params[:id])
+    flash[:notice] = "Success! #{user_ingredient_cost.ingredient.name.titleize} deleted."
     user_ingredient_cost.destroy
-
-    flash[:notice] = "Custom cost removed."
     redirect_to user_ingredients_path(user)
   end
 
   private
+
+  def set_variables
+    @user = User.find_by(id: params[:user_id])
+    @units = available_units  
+  end
 
   def ing_params
     params.require(:user_ingredient_cost).permit(:cost, :cost_size, :cost_unit)
