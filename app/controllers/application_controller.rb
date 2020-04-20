@@ -38,20 +38,31 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # Raise error if user not authorized
+  # Redirect if user not authorized
   def require_authorization(user)
-    return head(:forbidden) unless current_user == user || is_admin? 
+    unless current_user == user || is_admin?
+      flash[:error] = "Unauthorized resource. Please try again."
+      redirect_to root_path
+    end
   end 
   helper_method :require_authorization
 
   private
-	 
+   
+  # Redirect if not logged in
   def require_login
-    return head(:forbidden) unless current_user
+    unless current_user
+      flash[:error] = "Please sign up or log in."
+      redirect_to root_path
+    end
   end
 
+  # Redirect if user not admin
   def require_admin
-    return head(:forbidden) unless is_admin?
+    unless is_admin?
+      flash[:error] = "Invalid credentials."
+      redirect_to root_path
+    end
   end
 
 end
