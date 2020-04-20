@@ -78,10 +78,10 @@ class UserIngredientCostsController < ApplicationController
     require_authorization(@user)
 
     # Find and destroy record
-    user_ingredient_cost = user.user_ingredient_costs.find(params[:id])
+    user_ingredient_cost = @user.user_ingredient_costs.find(params[:id])
     flash[:notice] = "Success! #{user_ingredient_cost.ingredient.name.titleize} deleted."
     user_ingredient_cost.destroy
-    redirect_to user_ingredients_path(user)
+    redirect_to user_ingredients_path(@user)
   end
 
   private
