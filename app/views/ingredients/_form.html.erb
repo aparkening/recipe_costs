@@ -29,7 +29,7 @@
 
       <div class="form-group col-4">
         <%= f.label :cost_unit, 'Unit*' %>
-        <%= f.text_field :cost_unit, class:'form-control', placeholder:'ex: lb', required:true %>
+        <%= f.select(:cost_unit, @units, {}, {:class=>'custom-select'}) %>
       </div>
     </div><!-- /form-row -->
 

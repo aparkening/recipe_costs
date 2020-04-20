@@ -29,8 +29,7 @@
           </div>
           
           <div class="col-2">
-            <% units_array = @units.map { |unit| [unit, unit] } %>
-            <%= ing.select(:ingredient_unit, units_array, {}, {:class=>'custom-select'}) %>
+            <%= ing.select(:ingredient_unit, @units, {}, {:class=>'custom-select'}) %>
           </div>
 
           <div class="col pt-2 small text-muted">
