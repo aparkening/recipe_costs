@@ -38,7 +38,7 @@ class UserIngredientCostsController < ApplicationController
     require_authorization(@user)
 
     # Find record
-    @user_ingredient_cost = @user.user_ingredient_costs.find(params[:id])
+    @user_ingredient_cost = @user.user_ingredient_costs.find_by(id: params[:id])
 
     # Redirect if error
     redirect_to user_ingredients_path(@user), alert: "Custom cost not found." if @user_ingredient_cost.nil?
@@ -79,7 +79,7 @@ class UserIngredientCostsController < ApplicationController
 
     # Find and destroy record
     user_ingredient_cost = @user.user_ingredient_costs.find(params[:id])
-    flash[:notice] = "Success! #{user_ingredient_cost.ingredient.name.titleize} deleted."
+    flash[:success] = "Success! #{user_ingredient_cost.ingredient.name.titleize} deleted."
     user_ingredient_cost.destroy
     redirect_to user_ingredients_path(@user)
   end
