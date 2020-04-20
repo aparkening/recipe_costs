@@ -1,6 +1,7 @@
 class IngredientsController < ApplicationController
   before_action :require_admin, only: [:import]
   before_action :set_user
+  before_action :set_units
 
   # All records
   def index
@@ -10,12 +11,11 @@ class IngredientsController < ApplicationController
   # Display new form
   def new
     @ingredient = Ingredient.new
-    @units = available_units  
   end
 
   # Create record
   def create
-    # Make name lowercase
+    # Downcase name
     params[:ingredient][:name] = params[:ingredient][:name].downcase
     @ingredient = Ingredient.new(ing_params)
     if @ingredient.save
@@ -29,7 +29,6 @@ class IngredientsController < ApplicationController
   # Display edit form
   def edit
     @ingredient = Ingredient.find_by(id: params[:id])
-    @units = available_units
 
     redirect_to ingredients_path, alert: "Ingredient not found." if @ingredient.nil?
   end
@@ -68,6 +67,10 @@ class IngredientsController < ApplicationController
 
   def set_user
     @user = current_user
+  end
+
+  def set_units
+    @units = available_units  
   end
 
   def ing_params
