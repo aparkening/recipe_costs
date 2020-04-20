@@ -8,7 +8,8 @@ class ApplicationController < ActionController::Base
 
   # Set ingredient units. Too many extraneous units in Measured; manual list easier.
   def available_units
-    all_units = ['gram', 'kg', 'lb', 'oz', 'liter', 'gal', 'qt', 'pt', 'us_fl_oz', 'tsp', 'tbsp', 'cup', 'each'].sort
+    # After manual set, duplicate map for form select lists
+    all_units = ['gram', 'kg', 'lb', 'oz', 'liter', 'gal', 'qt', 'pt', 'us_fl_oz', 'tsp', 'tbsp', 'cup', 'each'].map { |unit| [unit, unit] }.sort
     return all_units
 	end
 
