@@ -64,10 +64,17 @@ class IngredientsController < ApplicationController
 
   # Delete record
   def destroy
-    # Find and destroy record
+    # Find record
     ingredient = Ingredient.find_by(id: params[:id])
-    flash[:notice] = "Success! #{ingredient.name.titleize} deleted."
-    ingredient.destroy
+
+    # Destroy unless error
+    if ingredient
+      flash[:success] = "Success! #{ingredient.name.titleize} deleted."
+      ingredient.destroy
+    else
+      flash[:alert] = "Ingredient not found."
+    end
+
     redirect_to ingredients_path
   end
 
