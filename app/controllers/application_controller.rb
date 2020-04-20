@@ -34,7 +34,7 @@ class ApplicationController < ActionController::Base
   def redirect_non_users
     if params[:user_id] && !User.exists?(params[:user_id])
       flash[:error] = "User not found."
-      redirect_to users_path
+      redirect_to root_path
     end
   end
 
