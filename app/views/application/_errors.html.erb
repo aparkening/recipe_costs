@@ -1,8 +1,8 @@
 <% if object.errors.any? %>
   <div id="error_explanation" class="alert alert-danger">
     <h2>
-      <%= pluralize(object.errors.count, "error") %>
-      prevented this record from being saved:
+      <%= pluralize(object.errors.count, "error").titleize %>
+      detected:
     </h2>
  
     <ul>
