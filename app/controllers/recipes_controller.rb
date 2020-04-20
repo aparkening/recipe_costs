@@ -178,13 +178,18 @@ class RecipesController < ApplicationController
     # Find record
     recipe = Recipe.find(params[:id])
     
-    # Manually delete recipe_ingredients because dependent: :destroy isn't working.
-    recipe.recipe_ingredients.each do |ri|
-      ri.destroy
+    # Destroy unless error
+    if recipe
+      # Manually delete recipe_ingredients because dependent: :destroy isn't working.
+      recipe.recipe_ingredients.each do |ri|
+        ri.destroy
+      end
+      flash[:success] = "Success! #{recipe.name} deleted."
+      recipe.destroy
+    else
+      flash[:alert] = "Recipe not found."
     end
 
-    flash[:success] = "Success! #{recipe.name} deleted."
-    recipe.destroy
     redirect_to user_recipes_path(@user)
   end
 

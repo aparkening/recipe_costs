@@ -77,10 +77,17 @@ class UserIngredientCostsController < ApplicationController
   def destroy
     require_authorization(@user)
 
-    # Find and destroy record
-    user_ingredient_cost = @user.user_ingredient_costs.find(params[:id])
-    flash[:success] = "Success! #{user_ingredient_cost.ingredient.name.titleize} deleted."
-    user_ingredient_cost.destroy
+    # Find record
+    user_ingredient_cost = @user.user_ingredient_costs.find_by(id: params[:id])
+    
+    # Destroy unless error
+    if user_ingredient_cost
+      flash[:success] = "Success! #{user_ingredient_cost.ingredient.name.titleize} deleted."
+      user_ingredient_cost.destroy
+    else
+      flash[:alert] = "Custom cost not found."
+    end
+
     redirect_to user_ingredients_path(@user)
   end
 
