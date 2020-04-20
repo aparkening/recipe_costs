@@ -1,42 +1,45 @@
 <%= render "application/errors", object: user %>
 
-<%= form_with model: user, local: true do |f| %>
-  <% if is_admin? %>
+<fieldset class="border border-muted rounded px-3 pt-3 my-3">
+
+  <%= form_with model: user, local: true do |f| %>
+    <% if is_admin? %>
+      <div class="form-group">
+        <%= f.label(:admin, "Admin user?") %>
+        <%= f.check_box :admin %>
+      </div>
+    <% end %>
+
     <div class="form-group">
-      <%= f.label(:admin, "Admin user?") %>
-      <%= f.check_box :admin %>
+      <%= f.label :name, 'Name*' %>
+      <%= f.text_field :name, class:'form-control', required:true %>
+    </div>
+
+    <% if @user.new_record? %>
+      <div class="form-row">
+        <div class="form-group col">
+          <%= f.label :password, 'Password*' %>
+          <%= f.password_field :password, class:'form-control', required:true  %>
+          <small id="emailHelp" class="form-text text-muted">Must contain more than 6 characters.</small>
+        </div>
+        <div class="form-group col">
+          <%= f.label :password_confirmation, 'Confirm Password*' %>
+          <%= f.password_field :password_confirmation, class:'form-control', required:true %>
+        </div>
+      </div><!-- /form-row -->
+    <% end %>
+
+    <div class="form-group">
+      <%= f.label :email %>
+      <%= f.email_field :email, class:'form-control' %>
+    </div>  
+    <div class="form-group">
+      <%= f.label :organization %>
+      <%= f.text_field :organization, class:'form-control' %>
+    </div>  
+
+    <div class="form-group">
+      <%= f.submit class:'btn btn-lg btn-primary btn-block' %>
     </div>
   <% end %>
-
-  <div class="form-group">
-    <%= f.label :name, 'Name*' %>
-    <%= f.text_field :name, class:'form-control', required:true %>
-  </div>
-
-  <% if @user.new_record? %>
-    <div class="form-row">
-      <div class="form-group col">
-        <%= f.label :password, 'Password*' %>
-        <%= f.password_field :password, class:'form-control', required:true  %>
-        <small id="emailHelp" class="form-text text-muted">Must contain more than 6 characters.</small>
-      </div>
-      <div class="form-group col">
-        <%= f.label :password_confirmation, 'Confirm Password*' %>
-        <%= f.password_field :password_confirmation, class:'form-control', required:true %>
-      </div>
-    </div><!-- /form-row -->
-  <% end %>
-
-  <div class="form-group">
-    <%= f.label :email %>
-    <%= f.email_field :email, class:'form-control' %>
-  </div>  
-  <div class="form-group">
-    <%= f.label :organization %>
-    <%= f.text_field :organization, class:'form-control' %>
-  </div>  
-
-  <div class="form-group">
-    <%= f.submit class:'btn btn-lg btn-primary btn-block' %>
-  </div>
-<% end %>
+</fieldset>
