@@ -1,5 +1,4 @@
 class IngredientsController < ApplicationController
-  # before_action :require_admin, only: [:import]
   before_action :require_admin
   before_action :set_variables
 
