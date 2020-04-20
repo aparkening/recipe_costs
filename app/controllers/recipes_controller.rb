@@ -14,6 +14,7 @@ class RecipesController < ApplicationController
         @recipes = Recipe.all 
       end  
     else
+      # User search matches this user's recipes
       if params[:search]
 		    @recipes = Recipe.users_recipes(@user).where('name LIKE ?', "%#{params[:search]}%").order('id DESC')
       # Else show this user's recipes
@@ -58,13 +59,16 @@ class RecipesController < ApplicationController
         @recipes = @user.recipes.recipes_of_ingredient(params[:id])
       end
     
+      # Show alert if ingredient not found in recipes
+      flash[:alert] = "#{@ingredient.name.titleize} not found in your recipes." if @recipes.length == 0 
+
     # Else show all user's recipes  
     else
       flash[:alert] = "That ingredient wasn't found."
       @recipes = @user.recipes
     end
 
-    render 'index'
+    render :index
   end
 
   # Display new form
@@ -115,8 +119,7 @@ class RecipesController < ApplicationController
     
     # Redirect if error
     else
-      flash[:alert] = "Recipe not found."
-      redirect_to user_recipes_path(@user)
+      redirect_to user_recipes_path(@user), alert: "Recipe not found."
     end
   end
 
@@ -131,10 +134,13 @@ class RecipesController < ApplicationController
       @recipe = @user.recipes.find_by(id: params[:id])
     end
 
-    # Add two blank ingredients to add more on edit screen
-    2.times{ @recipe.recipe_ingredients.build() }
-
-    redirect_to user_recipes_path(@user), alert: "Recipe not found." if @recipe.nil?
+    # Redirect if recipe not found
+    if @recipe.nil?
+      redirect_to user_recipes_path(@user), alert: "Recipe not found." 
+    # Else display edit form with two blank ingredients
+    else
+      2.times{ @recipe.recipe_ingredients.build() }
+    end
   end
 
   # Update record
