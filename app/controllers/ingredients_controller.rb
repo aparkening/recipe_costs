@@ -1,7 +1,6 @@
 class IngredientsController < ApplicationController
   before_action :require_admin, only: [:import]
-  before_action :set_user
-  before_action :set_units
+  before_action :set_variables
 
   # All records
   def index
@@ -65,11 +64,8 @@ class IngredientsController < ApplicationController
 
   private
 
-  def set_user
+  def set_variables
     @user = current_user
-  end
-
-  def set_units
     @units = available_units  
   end
 
