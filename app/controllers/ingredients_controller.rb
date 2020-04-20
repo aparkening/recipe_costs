@@ -1,5 +1,6 @@
 class IngredientsController < ApplicationController
-  before_action :require_admin, only: [:import]
+  # before_action :require_admin, only: [:import]
+  before_action :require_admin
   before_action :set_variables
 
   # All records
@@ -16,7 +17,11 @@ class IngredientsController < ApplicationController
   def create
     # Downcase name
     params[:ingredient][:name] = params[:ingredient][:name].downcase
+    
+    # Create ingredient
     @ingredient = Ingredient.new(ing_params)
+
+    # Redirect unless error
     if @ingredient.save
       flash[:success] = "Success! #{@ingredient.name.titleize} created."
       redirect_to ingredients_path
@@ -27,19 +32,23 @@ class IngredientsController < ApplicationController
 
   # Display edit form
   def edit
+    # Find record
     @ingredient = Ingredient.find_by(id: params[:id])
 
+    # Redirect if error
     redirect_to ingredients_path, alert: "Ingredient not found." if @ingredient.nil?
   end
 
   # Update record
   def update
-    # Make name lowercase
+    # Downcase name
     params[:ingredient][:name] = params[:ingredient][:name].downcase
 
+    # Find and update record
     @ingredient = Ingredient.find_by(id: params[:id])
     @ingredient.update(ing_params)
 
+    # Redirect unless error
     if @ingredient.save
       flash[:success] = "Success! #{@ingredient.name.titleize} updated."
       redirect_to ingredients_path
@@ -56,6 +65,7 @@ class IngredientsController < ApplicationController
 
   # Delete record
   def destroy
+    # Find and destroy record
     ingredient = Ingredient.find(params[:id])
     flash[:notice] = "Success! #{ingredient.name.titleize} deleted."
     ingredient.destroy
