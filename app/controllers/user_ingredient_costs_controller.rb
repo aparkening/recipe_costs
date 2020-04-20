@@ -17,6 +17,7 @@ class UserIngredientCostsController < ApplicationController
 
     @user = User.find_by(id: params[:user_id])
     @user_ingredient_cost = @user.user_ingredient_costs.build()
+    @units = available_units  
   end
 
   # Create record
@@ -34,7 +35,7 @@ class UserIngredientCostsController < ApplicationController
 
     # Redirect unless error
     if @user_ingredient_cost.save
-      flash[:success] = "Success! Custom cost created."
+      flash[:success] = "Success! #{@user_ingredient_cost.ingredient.name.titleize}  created."
       redirect_to user_ingredients_path(@user)
     else
       render :new
@@ -61,6 +62,7 @@ class UserIngredientCostsController < ApplicationController
   def edit
     redirect_non_users
     @user = User.find_by(id: params[:user_id])
+    @units = available_units  
 
     # Require authorization
     require_authorization(@user)
