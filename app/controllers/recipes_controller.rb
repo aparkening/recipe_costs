@@ -146,16 +146,16 @@ class RecipesController < ApplicationController
   # Update record
   def update
     require_authorization(@user)
-
+    
+    # Find and update record
     @recipe = Recipe.find(params[:id])
     @recipe.update(recipe_params)
 
+    # Redirect unless error
     if @recipe.save
-      flash[:success] = "Success! Recipe updated."
+      flash[:success] = "Success! #{@recipe.name.titleize} updated."
       redirect_to user_recipe_path(@user, @recipe)
     else
-      # flash[:error] = recipe.errors.full_messages
-      # redirect_to edit_user_recipe_path(user, recipe)
       render :edit
     end
   end
@@ -167,7 +167,8 @@ class RecipesController < ApplicationController
 
     Recipe.import(params[:file], user)
 
-    redirect_to user_recipes_path(user), notice: "Success! File imported."
+    flash[:success] = "Success! File imported."
+    redirect_to user_recipes_path(user)
   end
 
   # Delete record
@@ -177,12 +178,12 @@ class RecipesController < ApplicationController
     # Find record
     recipe = Recipe.find(params[:id])
     
-    # Manually delete recipe_ingredients, since dependent: :destroy isn't working.
+    # Manually delete recipe_ingredients because dependent: :destroy isn't working.
     recipe.recipe_ingredients.each do |ri|
       ri.destroy
     end
 
-    flash[:notice] = "Success! #{recipe.name} deleted."
+    flash[:success] = "Success! #{recipe.name} deleted."
     recipe.destroy
     redirect_to user_recipes_path(@user)
   end
