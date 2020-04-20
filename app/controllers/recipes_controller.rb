@@ -1,11 +1,12 @@
 class RecipesController < ApplicationController
   before_action :require_login
+  before_action :redirect_non_users
+  before_action :set_variables
 
   # Display all user's recipes
   def index
     if is_admin?
       @recipes = Recipe.all
-      @user = User.find_by(id: params[:user_id])
 
       # Admin search matches all recipes
       if params[:search]
@@ -13,9 +14,6 @@ class RecipesController < ApplicationController
 		    @recipes = Recipe.where('name LIKE ?', "%#{params[:search]}%").order('id DESC')
       end
     else
-      redirect_non_users      
-      @user = User.find_by(id: params[:user_id])
-
       if params[:search]
         # If search, find results
 		    @recipes = Recipe.users_recipes(@user).where('name LIKE ?', "%#{params[:search]}%").order('id DESC')
@@ -53,11 +51,7 @@ class RecipesController < ApplicationController
   end
 
   # Display user's recipes by ingredient
-  def by_ingredient
-    redirect_non_users
-        
-    @user = User.find_by(id: params[:user_id])
-  
+  def by_ingredient  
     # If ingredient exists, find recipes that use it
     if Ingredient.exists?(params[:id])
       @ingredient = Ingredient.find(params[:id])
@@ -78,13 +72,8 @@ class RecipesController < ApplicationController
     render 'index'
   end
 
-
   # Display record
   def show
-    redirect_non_users
-    @user = User.find_by(id: params[:user_id])
-    
-    # Require authorization
     require_authorization(@user)
 
     # Search all recipes for admin; subset for user
@@ -112,10 +101,7 @@ class RecipesController < ApplicationController
 
   # Display new form
   def new
-    redirect_non_users
-    @user = User.find_by(id: params[:user_id])
     @recipe = Recipe.new(user_id: params[:user_id])
-    @units = available_units  
 
     # Display 10 ingredient fields
     10.times{ @recipe.recipe_ingredients.build() }
@@ -123,10 +109,6 @@ class RecipesController < ApplicationController
 
   # Create new
   def create
-    redirect_non_users
-    @user = User.find_by(id: params[:user_id])
-
-    # Ensure current user can create for user
     require_authorization(@user)
 
     # Create recipe
@@ -143,11 +125,6 @@ class RecipesController < ApplicationController
 
   # Display update form
   def edit
-    redirect_non_users
-    @user = User.find_by(id: params[:user_id])
-    @units = available_units  
-
-    # Require authorization
     require_authorization(@user)
 
     # Search all recipes for admin; subset for user
@@ -165,10 +142,6 @@ class RecipesController < ApplicationController
 
   # Update record
   def update
-    redirect_non_users
-    @user = User.find_by(id: params[:user_id])
-    
-    # Require authorization
     require_authorization(@user)
 
     @recipe = Recipe.find(params[:id])
@@ -187,10 +160,7 @@ class RecipesController < ApplicationController
   # Import CSVs
   # user_recipes_import_path
   def import
-    redirect_non_users
-    
-    user = User.find_by(id: params[:user_id])
-    require_authorization(user)
+    require_authorization(@user)
 
     Recipe.import(params[:file], user)
 
@@ -199,11 +169,7 @@ class RecipesController < ApplicationController
 
   # Delete record
   def destroy
-    redirect_non_users
-    user = User.find_by(id: params[:user_id])
-
-    # Require authorization
-    require_authorization(user)
+    require_authorization(@user)
 
     recipe = Recipe.find(params[:id])
     
@@ -212,16 +178,17 @@ class RecipesController < ApplicationController
       ri.destroy
     end
 
+    flash[:notice] = "Success!! #{recipe.name} deleted."
     recipe.destroy
-    flash[:notice] = "Recipe deleted."
-    redirect_to user_recipes_path(user)
+    redirect_to user_recipes_path(@user)
   end
 
   private
 
-  # def find_user
-  #   @user = User.find_by(id: params[:user_id])
-  # end
+  def set_variables
+    @user = User.find_by(id: params[:user_id])
+    @units = available_units  
+  end
 
   def recipe_params
     params.require(:recipe).permit(:name, :servings, :user_id, recipe_ingredients_attributes: [:user_id, :ingredient_id, :ingredient_amount, :ingredient_unit, :_destroy, :id])
