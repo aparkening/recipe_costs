@@ -1,0 +1,9 @@
+<h1>Oh no, an Error!</h1>
+
+<% if @error %>
+  <div class="alert alert-danger">
+    <h3><%= @error[:title] %></h3>
+    <p><%= @error[:msg] %></p>
+  </div>
+<% end %>
+

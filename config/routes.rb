@@ -24,6 +24,9 @@ Rails.application.routes.draw do
   get 'auth/:provider/callback', to: 'sessions#googleAuth'
   get 'auth/failure', to: redirect('/')
 
+  # Exceptions
+  get '/404', to: "errors#not_found", :via => :all
+  get '/422', to: "errors#unacceptable", :via => :all
+  get '/500', to: "errors#internal_error", :via => :all
 
-  # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
 end
