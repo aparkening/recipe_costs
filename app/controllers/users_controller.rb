@@ -27,7 +27,7 @@ class UsersController < ApplicationController
 
     # Create user
     @user = User.new(user_params)
-
+    
     # Set session and redirect unless admin or error
     if @user.save
       if is_admin?
