@@ -25,9 +25,9 @@ class SessionsController < ApplicationController
   end
 
   # Google Oauth Login
-  def googleAuth
+  def google_auth
     # Get access tokens from the google server; find or create user
-    user = User.find_or_create_by_omniauth(auth)
+    @user = User.find_or_create_by_omniauth(auth)
 
     # Access_token is used to authenticate request made from the rails application to the google server
     # user.google_token = auth.credentials.token
@@ -37,12 +37,18 @@ class SessionsController < ApplicationController
     # refresh_token = auth.credentials.refresh_token
     # user.google_refresh_token = refresh_token if refresh_token.present?
 
-    if user.save
-      session[:user_id] = user.id
-      redirect_to user_path(user)
+    if @user.save
+      session[:user_id] = @user.id
+      redirect_to user_path(@user)
     else
-      flash[:error] = "Invalid credentials. Please try again."
-      redirect_to login_path
+      render 'users/new'
+      # <% object.errors.full_messages.each do |msg| %>
+      #   <li><%= msg %></li>
+      # <% end %>
+
+
+      # flash[:error] = "#{user.errors.full_messages} Invalid credentials. Please try again."
+      # redirect_to login_path
     end
   end
 
