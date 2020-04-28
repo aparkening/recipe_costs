@@ -32,10 +32,10 @@ class ApplicationController < ActionController::Base
 
   # Return true if user authorized. Else redirect and return false.
   def authorize(user="no")
-    # if user.nil?
-    #   not_authorized("User not found.")
-    #   false
-    if user == 'no'
+    if user.nil?
+      not_authorized("User not found.")
+      false
+    elsif user == 'no'
       require_login
       !!current_user
     else
