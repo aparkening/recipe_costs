@@ -10,8 +10,7 @@ class UsersController < ApplicationController
       @users = User.all.order(name: :asc)
       @user = current_user
     else
-      return head(:forbidden)
-      # redirect_to root_path, error: "You're not authorized to see this resource."
+      not_authorized
     end
   end
 
@@ -27,7 +26,7 @@ class UsersController < ApplicationController
 
     # Create user
     @user = User.new(user_params)
-    
+
     # Set session and redirect unless admin or error
     if @user.save
       if is_admin?
@@ -44,58 +43,55 @@ class UsersController < ApplicationController
 
   # Display record
   def show
-    redirect_non_users
-    require_authorization(@user)
-
-    # Get all ingredients used by user
-    @ingredients = @user.recipes.all_ingredients
+    if authorize(@user)
+      # Get all ingredients used by user
+      @ingredients = @user.recipes.all_ingredients    
+    end
   end  
 
   # Display edit form
   def edit
-    redirect_non_users
-
-    require_authorization(@user)
+    authorize(@user)
   end
  
   # Update record
   def update
-    redirect_non_users
-    require_authorization(@user)
+    if authorize(@user)
+      # Set correct admin data if box checked
+      params[:user][:admin] = "true" if params[:user][:admin] && params[:user][:admin] == "1"
 
-    # Set correct admin data if box checked
-    params[:user][:admin] = "true" if params[:user][:admin] && params[:user][:admin] == "1"
+      # Update record
+      @user.update(user_params)
 
-    # Update record
-    @user.update(user_params)
-
-    # Redirect unless error
-    if @user.save
-      if @user == current_user
-        redirect_to @user, notice: "Success! You're updated."
-      else 
-        redirect_to users_path, notice: "#{@user.name} successfully updated."
+      # Redirect unless error
+      if @user.save
+        if @user == current_user
+          redirect_to @user, notice: "Success! You're updated."
+        else 
+          redirect_to users_path, notice: "#{@user.name} successfully updated."
+        end
+      else
+        render :edit
       end
-    else
-      render :edit
     end
   end
 
   # Delete record
   def destroy
-    # Only admins can delete users
-    if is_admin?
-      # Destroy unless error
-      if @user
-        flash[:success] = "Success! #{@user.name.titleize} deleted."
-        user.destroy
+    if authorize(@user)
+      # Only admins can delete users
+      if is_admin?
+        # Destroy unless error
+        if @user
+          flash[:success] = "Success! #{@user.name.titleize} deleted."
+          user.destroy
+        else
+          flash[:alert] = "Custom cost not found."
+        end
+        redirect_to users_path
       else
-        flash[:alert] = "Custom cost not found."
+        require_admin
       end
-
-      redirect_to users_path
-    else
-      redirect_to root_path, error: "You're not authorized to change this resource."
     end
   end
 
