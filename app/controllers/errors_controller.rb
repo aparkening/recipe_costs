@@ -13,6 +13,13 @@ class ErrorsController < ApplicationController
     render :error
   end
 
+  # 403 page
+  def forbidden
+    @error = {title: "Access Denied", msg: "You don't have access to this resource. Please select another page from the navigation above or contact the site owner."}
+    render :error
+  end
+
+
   # 500 page
   def internal_error
     @error = {title: "Internal Server Error", msg: "Something went wrong. Please select another page from the navigation above or contact the site owner."}

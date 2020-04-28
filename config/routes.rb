@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   # Exceptions
   get '/404', to: "errors#not_found", :via => :all
   get '/422', to: "errors#unacceptable", :via => :all
+  get '/403', to: "errors#forbidden", :via => :all
   get '/500', to: "errors#internal_error", :via => :all
 
 end
