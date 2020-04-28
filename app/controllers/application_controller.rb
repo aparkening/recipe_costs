@@ -13,56 +13,75 @@ class ApplicationController < ActionController::Base
     return all_units
 	end
 
-  # Set current user
+  # Return current user. Set current user if doesn't already exist and user id present.
 	def current_user
 	  @current_user ||= User.find(session[:user_id]) if session[:user_id].present?
 	end
   helper_method :current_user
   
-  # Determine if current user is admin
+  # Return true if current user exists and is admin
   def is_admin?
     current_user && current_user.admin
   end
   helper_method :is_admin?
 
-  # Raise errors if user doesn't have permissions to access
+  # Return true if user is the current user or admin
   def user_authorized?(user)
     user == current_user || is_admin?
   end
 
-  # Check database for user provided by params. Redirect if none found.
-  def redirect_non_users
-    if params[:user_id] && !User.exists?(params[:user_id])
-      flash[:error] = "User not found."
-      redirect_to root_path
+  # Redirect if user not authorized
+  # def require_authorization(user)
+  #   unless user_authorized?(user)
+  #     flash[:alert] = "Access Denied. You don't have access to this resource."
+  #     redirect_to root_path and return
+  #   end
+  # end 
+
+  # Return true if user authorized. Else redirect and return false.
+  def authorize(user="no")
+    if user.nil?
+      not_authorized("User not found.")
+      false
+    elsif user == 'no'
+      require_login
+      !!current_user
+    else
+      if user_authorized?(user)
+        true
+      else
+        not_authorized
+        false
+      end
     end
   end
-
-  # Redirect if user not authorized
-  def require_authorization(user)
-    unless current_user == user || is_admin?
-      flash[:error] = "Unauthorized resource. Please try again."
-      redirect_to root_path
-    end
-  end 
-  helper_method :require_authorization
 
   private
-   
+
+  # Redirect with flash error 
+  def not_authorized(msg = "Access Denied. You don't have access to this resource.")
+    flash[:error] = msg
+    redirect_to root_path
+  end
+
+  # Check database for user provided by params. Redirect if none found.
+  def redirect_non_users(id = params[:user_id])
+    not_authorized("User not found.") if id && !User.exists?(id)
+  end
+
   # Redirect if not logged in
   def require_login
-    unless current_user
-      flash[:error] = "Please sign up or log in."
-      redirect_to root_path
-    end
+    not_authorized("Please sign up or log in above to access this resource.") unless current_user
   end
+  helper_method :require_login
 
   # Redirect if user not admin
   def require_admin
-    unless is_admin?
-      flash[:error] = "Invalid credentials."
-      redirect_to root_path
-    end
+    not_authorized("Invalid credentials.") unless is_admin?
+    # unless is_admin?
+    #   flash[:error] = "Invalid credentials."
+    #   redirect_to root_path
+    # end
   end
 
 end
