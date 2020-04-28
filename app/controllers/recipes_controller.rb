@@ -171,10 +171,10 @@ class RecipesController < ApplicationController
   # user_recipes_import_path
   def import
     if authorize(@user)
-      Recipe.import(params[:file], user)
+      Recipe.import(params[:file], @user)
 
       flash[:success] = "Success! File imported."
-      redirect_to user_recipes_path(user)
+      redirect_to user_recipes_path(@user)
     end
   end
 
