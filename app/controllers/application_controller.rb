@@ -30,20 +30,12 @@ class ApplicationController < ActionController::Base
     user == current_user || is_admin?
   end
 
-  # Redirect if user not authorized
-  # def require_authorization(user)
-  #   unless user_authorized?(user)
-  #     flash[:alert] = "Access Denied. You don't have access to this resource."
-  #     redirect_to root_path and return
-  #   end
-  # end 
-
   # Return true if user authorized. Else redirect and return false.
   def authorize(user="no")
-    if user.nil?
-      not_authorized("User not found.")
-      false
-    elsif user == 'no'
+    # if user.nil?
+    #   not_authorized("User not found.")
+    #   false
+    if user == 'no'
       require_login
       !!current_user
     else
@@ -78,10 +70,6 @@ class ApplicationController < ActionController::Base
   # Redirect if user not admin
   def require_admin
     not_authorized("Invalid credentials.") unless is_admin?
-    # unless is_admin?
-    #   flash[:error] = "Invalid credentials."
-    #   redirect_to root_path
-    # end
   end
 
 end
