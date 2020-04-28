@@ -18,6 +18,9 @@ class RecipesController < ApplicationController
         # User search matches this user's recipes
         if params[:search]
           @recipes = Recipe.users_recipes(@user).where('name LIKE ?', "%#{params[:search]}%").order('id DESC')
+
+          flash[:alert] = "No recipe names match '#{params[:search]}'" if @recipes.empty?
+
         # Else show this user's recipes
         else
           @recipes = @user.recipes.includes(:recipe_ingredients) 
@@ -170,7 +173,7 @@ class RecipesController < ApplicationController
   # Import CSVs
   # user_recipes_import_path
   def import
-    if authorize(@user)
+    if params[:file] && authorize(@user)
       Recipe.import(params[:file], @user)
 
       flash[:success] = "Success! File imported."
