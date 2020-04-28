@@ -21,7 +21,7 @@ Rails.application.routes.draw do
   get '/logout' => 'sessions#destroy'
 
   # Google authentication
-  get 'auth/:provider/callback', to: 'sessions#googleAuth'
+  get 'auth/:provider/callback', to: 'sessions#google_auth'
   get 'auth/failure', to: redirect('/')
 
   # Exceptions
