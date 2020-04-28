@@ -38,7 +38,7 @@ gem 'bootstrap', '>= 4.0'
 # Google Oauth2
 # gem 'omniauth'
 gem 'omniauth-google-oauth2'
-gem 'omniauth-rails_csrf_protection', '~> 0.1'
+# gem 'omniauth-rails_csrf_protection', '~> 0.1'
 
 # Env file
 gem 'dotenv-rails'
