@@ -13,6 +13,7 @@ class Recipe < ApplicationRecord
 
   # Validations
   validates :name, presence: true
+  # Recipe name must be unique per user
   validates :name, uniqueness: { 
     scope: %i[user_id],
     message: 'must be unique.' 
@@ -40,49 +41,30 @@ class Recipe < ApplicationRecord
       ingredient_unit = row["ingredient_unit"]
 
       # Find or create recipe
-      recipe = Recipe.find_by_name(recipe_name)
+      recipe = Recipe.users_recipes(user).find_by_name(recipe_name)
       if !recipe
         recipe = user.recipes.create(name: recipe_name)
       end
 
-      # Create recipe_ingredient record
-      recipe.recipe_ingredients.create(ingredient: Ingredient.find_by_name(name), ingredient_amount: ingredient_amount, ingredient_unit: ingredient_unit)
-
-      recipe.save
+      # If ingredient already exists in recipe, update record. Else create record.
+      ingredient = Ingredient.find_by_name(name)
+      if recipe_ingredient = recipe.recipe_ingredients.find_by(ingredient: ingredient)
+        recipe_ingredient.update(ingredient: ingredient, ingredient_amount: ingredient_amount, ingredient_unit: ingredient_unit)
+      else
+        recipe.recipe_ingredients.create(ingredient: ingredient, ingredient_amount: ingredient_amount, ingredient_unit: ingredient_unit)
+        recipe.save
+      end
     end
   end
 
+  # Calculate total recipe cost
+  def total_cost(ingredient_costs)
+    ingredient_costs.inject(0){|sum,x| sum + x.total_cost }.round(2)
+  end
 
- ## Instance versions 
-    # Calculate recipe cost
-    # def ingredient_costs
-    #   recipe_total = 0
-    #   self.recipe_ingredients.map do |ingredient|
-    #     # Add cost to ingredient
-    #     combo_ingredient = CombinedIngredient.new(ingredient).total_cost
-    #     # recipe_total += combo_ingredient.total_cost
-    #   end
-    # end
-
-    # Calculate total recipe cost
-    def total_cost(ingredient_costs)
-      ingredient_costs.inject(0){|sum,x| sum + x.total_cost }.round(2)
-    end
-
-    # Calculate recipe cost per serving
-    def cost_per_serving(total_cost)
-      (total_cost/self.servings).round(2)
-    end
-
-
-  # Writer for custom accepts_nested_attributes_for
-  # def recipe_ingredients=(ingredients_attributes)
-
-  #   ingredient = Ingredient.find(ingredients_attributes[:ingredient_id])
-
-  #   if !self.recipe_ingredients.include?(ingredient)
-  #     self.recipe_ingredients.build(:ingredient => ingredient, :ingredient_amount => ingredients_attributes[:ingredient_amount], :ingredient_unit => ingredients_attributes[:ingredient_unit])
-  #   end 
-  # end
+  # Calculate recipe cost per serving
+  def cost_per_serving(total_cost)
+    (total_cost/self.servings).round(2)
+  end
 
 end
