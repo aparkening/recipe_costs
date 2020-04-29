@@ -58,8 +58,10 @@ class IngredientsController < ApplicationController
 
   # Import CSVs
   def import
-    Ingredient.import(params[:file])
-    redirect_to ingredients_path, notice: "Success! File imported."
+    if params[:file]
+      Ingredient.import(params[:file])
+      redirect_to ingredients_path, notice: "Success! File imported."
+    end
   end
 
   # Delete record
