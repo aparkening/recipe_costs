@@ -9,7 +9,7 @@ class RecipesController < ApplicationController
       if is_admin?
         # Admin search matches all recipes
         if params[:search]
-          @recipes = Recipe.where('name LIKE ?', "%#{params[:search]}%").order('id DESC')
+          @recipes = Recipe.where('name LIKE ?', "%#{params[:search]}%").order(name: :asc)
         # Else show all recipes
         else
           @recipes = Recipe.all 
@@ -17,7 +17,7 @@ class RecipesController < ApplicationController
       else
         # User search matches this user's recipes
         if params[:search]
-          @recipes = Recipe.users_recipes(@user).where('name LIKE ?', "%#{params[:search]}%").order('id DESC')
+          @recipes = Recipe.users_recipes(@user).where('name LIKE ?', "%#{params[:search]}%").order(name: :asc)
 
           flash[:alert] = "No recipe names match '#{params[:search]}'" if @recipes.empty?
 
