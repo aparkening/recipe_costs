@@ -23,7 +23,7 @@ class RecipesController < ApplicationController
 
         # Else show this user's recipes
         else
-          @recipes = @user.recipes.includes(:recipe_ingredients) 
+          @recipes = @user.recipes.includes(:recipe_ingredients).order(name: :asc)
         end
 
         # Map ingredient costs with new_recipe hash
