@@ -18,10 +18,13 @@
  @import "bootstrap";
 
 body {
-  padding-top: 5rem;
+  // padding-top: 5rem;
 }
 h1 {
   margin-bottom: 1rem;  
+}
+.container {
+  padding-top: 2rem;
 }
 
 // Navbar
@@ -32,7 +35,12 @@ h1 {
   height: 1.5rem;
   width: 1.5rem;
 }
-@include media-breakpoint-up(md) {
+@include media-breakpoint-down (xs) {
+  .navbar input.btn { 
+    margin-top: 1rem;
+  }
+}
+@include media-breakpoint-up(lg) {
   .navbar-brand {
     padding-right: 1rem !important;
     border-right: 1px solid #dee2e6 !important;
