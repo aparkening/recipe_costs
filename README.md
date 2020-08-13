@@ -11,26 +11,56 @@ Professional kitchens need to know their recipe costs to profitably price their 
 - Users can browse their full recipe list or recipes by ingredient.
 
 
-## Installation
+## Basic Installation
 
 1. Clone this repo.
 2. Install dependences:
 ```
-    $ bundle install
+$ bundle install
 ```
 3. Create database structure:
 ```
-    $ rails db:migrate
+$ rails db:migrate
 ```
 4. Run web server:
 ```
-    $ rails s
+$ rails s
 ```
-5. Navigate to `localhost:3000` in your browser.
+5. Navigate to `localhost:3000` in your browser to begin using the app. 
 
-## Usage
+Add your own data to get started, or add Google Sign In functionlity and/or bulk users, ingredients, and recipes below.
 
-Add your own data to get started. Or take the steps below to interact with a fully-populated app.
+## Google Sign In Installation (Google Oauth)
+To use Google accounts, you'll need to create your own Google API key and store the credentials inside a local file.
+
+### Create Credentials File
+
+1. Make a new `.env` file in the main directory. This file has been ignored by Git, so it will stay local.
+
+2. Add the following placeholders to your `.env` file. Once you've created your id and secret, add them to the appropriate variable name below.
+```
+GOOGLE_CLIENT_ID=<replace me with ID>
+GOOGLE_CLIENT_SECRET=<replace me with secret>
+```
+
+### Create Google Credentials
+
+Note: Handy screenshot instructions are in the "Create Google App" section of https://medium.com/@amoschoo/google-oauth-for-ruby-on-rails-129ce7196f35. 
+
+
+1. Navigate to https://console.developers.google.com/ and log in with a Google account.
+
+2. Select '+' to create a new Google project. The project name can be anything you choose.
+
+3. Select 'Credentials' and 'Oauth consent screen'. Input your own contact information. The app doesn't require terms or other URLs.
+
+4. Create Oauth client ID and input the following URL in the 'Authorized redirect URIs' field: http://localhost:3000/auth/google_oauth2/callback
+
+5. Add the resulting client id and secret to your `.env` file.
+
+## Add Bulk Users, Ingredients, and Recipes
+
+To interact with many users, ingredients, and recipes, add the seed data and CSV files below.
 
 1. Run the seed file to create default users and starter ingredients:
 ```
